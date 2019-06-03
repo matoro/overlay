@@ -1,0 +1,15 @@
+[Unit]
+Description=Moloch Capture
+After=network.target
+
+[Service]
+Type=simple
+Restart=on-failure
+StandardOutput=tty
+EnvironmentFile=-/etc/conf.d/moloch-capture
+ExecStart=/bin/sh -c '/usr/bin/moloch-capture -c /etc/moloch/config.ini ${MOLOCH_CAPTURE_OPTIONS} >> /var/log/moloch-capture.log 2>&1'
+LimitCORE=infinity
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=multi-user.target

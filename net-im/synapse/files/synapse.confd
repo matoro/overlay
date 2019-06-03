@@ -1,0 +1,3 @@
+# /etc/conf.d/synapse
+
+SYNAPSE_OPTS="--server-name synapse.matoro.tk"
