@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>matoro@airmail.cc</email>
+	</maintainer>
+	<longdescription lang="en">
+		libtranscript is a character-set conversion library, much like the
+		iconv set of functions.  The library allows great control over the
+		conversions.  It was designed for use in programs which use Unicode
+		internally, using UTF-8, UTF-16 or UTF-32/UCS-4.
+	</longdescription>
+	<use>
+		<flag name="ucm2ltc">Build converter specification compiler (ucm2ltc)</flag>
+	</use>
+</pkgmetadata>
