@@ -52,6 +52,6 @@ python_compile() {
 }
 
 python_test() {
-	"${EPYTHON}" "$(which nosetests)" --with-yanc || die
+	nosetests --with-yanc || die "Tests failed under ${EPYTHON}"
 	use doc && emake -C docs doctest
 }
