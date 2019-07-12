@@ -15,6 +15,7 @@
 	<use>
 		<flag name="acme">Enable ACME support for TLS cert provisioning</flag>
 		<flag name="consent">Enable support for TOS consent tracking</flag><!--https://github.com/matrix-org/synapse/blob/master/docs/consent_tracking.md-->
+		<flag name="jwt">Enable support for JWT login</flag>
 		<flag name="mail">Enable e-mail notification support</flag>
 		<flag name="saml">Enable support for SAML SSO authentication</flag>
 		<flag name="sentry">Enable support for the Sentry error reporting SDK</flag>
