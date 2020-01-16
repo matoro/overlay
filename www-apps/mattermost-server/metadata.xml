@@ -20,7 +20,7 @@
 		rivals the productivity of SaaS solutions.
 	</longdescription>
 	<use>
-		<flag name="audit">
+		<flag name="npm-audit">
 			Run 'npm audit' to perform security reports and try to fix
 			known vulnerabilities (requires npm v6)
 		</flag>

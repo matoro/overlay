@@ -4,8 +4,8 @@
 EAPI=7
 
 # Change this when you update the ebuild
-GIT_COMMIT="539217ef5b26b746bc2a5914165c0a36d801baaf"
-WEBAPP_COMMIT="56dcdde78ecba2bdf5170330d1a6152cd365c3ef"
+GIT_COMMIT="90cf883f84000d6fdb025308ad14d56e6ed53f05"
+WEBAPP_COMMIT="aced994072f8830a8accf80a4366bc9ea2104545"
 EGO_PN="github.com/mattermost/${PN}"
 WEBAPP_P="mattermost-webapp-${PV}"
 MY_PV="${PV/_/-}"
@@ -29,7 +29,7 @@ RESTRICT="mirror test"
 LICENSE="AGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~arm64 ~x86" # Untested: arm64 x86
-IUSE="+audit debug pie static"
+IUSE="+npm-audit debug pie static"
 
 DEPEND="${DEPEND}
 	>net-libs/nodejs-6[npm]
@@ -51,7 +51,7 @@ pkg_pretend() {
 			die "[network-sandbox] is enabled in FEATURES"
 		fi
 
-		if use audit && [[ $(npm --version) != 6.* ]]; then
+		if use npm-audit && [[ $(npm --version) != 6.* ]]; then
 			ewarn
 			ewarn "npm v6 is required to run 'npm audit', which is a new command that"
 			ewarn "performs security reports and tries to fix known vulnerabilities"
@@ -146,7 +146,7 @@ src_compile() {
 
 	pushd client > /dev/null || die
 	emake build
-	if use audit && [[ $(npm --version) =~ 6.* ]]; then
+	if use npm-audit && [[ $(npm --version) =~ 6.* ]]; then
 		ebegin "Attempting to fix potential vulnerabilities"
 		npm audit fix --package-lock-only
 		eend $? || die
