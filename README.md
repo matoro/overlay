@@ -8,4 +8,5 @@ You may be interested in:
 * media-sound/airsonic-bin: "Airsonic, a Free and Open Source community driven media server"
 * net-analyzer/moloch: "Open source, large scale, full packet capturing, indexing, and database system"
 * net-im/synapse: "Matrix reference homeserver"
+* www-apps/guacamole: "A clientless HTML5 remote desktop gateway"
 * www-apps/mattermost-server: "Open source Slack-alternative on Golang and React (Team Edition)"

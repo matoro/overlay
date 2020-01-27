@@ -1,0 +1,316 @@
+Description: Port to OpenSSL 1.1
+ Failed to find replacement for CRYPTO_mem_leaks() in the Debian build
+ of openssl.  No idea what the call do or how important it is to keep.
+
+ This patch make the code incompatible with OpenSSL 1.0.  To make it
+ compatible with older versions, the *_new() and *_free() functions
+ need to be provided.  Their implementation is fairly trivial.
+Author: Petter Reinholdtsen <pere@debian.org>
+Bug-Debian: https://bugs.debian.org/828142
+Forwarded: no
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: 2016-10-28
+
+--- freerdp-1.1.0~git20140921.1.440916e+dfsg1.orig/include/freerdp/crypto/crypto.h
++++ freerdp-1.1.0~git20140921.1.440916e+dfsg1/include/freerdp/crypto/crypto.h
+@@ -61,12 +61,12 @@ struct crypto_rc4_struct
+ 
+ struct crypto_des3_struct
+ {
+-	EVP_CIPHER_CTX des3_ctx;
++	EVP_CIPHER_CTX * des3_ctx;
+ };
+ 
+ struct crypto_hmac_struct
+ {
+-	HMAC_CTX hmac_ctx;
++	HMAC_CTX * hmac_ctx;
+ };
+ 
+ struct crypto_cert_struct
+--- freerdp-1.1.0~git20140921.1.440916e+dfsg1.orig/libfreerdp/core/certificate.c
++++ freerdp-1.1.0~git20140921.1.440916e+dfsg1/libfreerdp/core/certificate.c
+@@ -650,8 +650,12 @@ rdpRsaKey* key_new(const char* keyfile)
+ 			free(key) ;
+ 			return NULL;
+ 	}
+-
+-	if (BN_num_bytes(rsa->e) > 4)
++	BIGNUM *rsan, *rsae, *rsad;
++	rsan = BN_new();
++	rsae = BN_new();
++	rsad = BN_new();
++	RSA_set0_key(rsa, rsan, rsae, rsad);
++	if (BN_num_bytes(rsae) > 4)
+ 	{
+ 		RSA_free(rsa);
+ 		fprintf(stderr, "RSA public exponent too large in %s", keyfile);
+@@ -659,20 +663,23 @@ rdpRsaKey* key_new(const char* keyfile)
+ 		return NULL;
+ 	}
+ 
+-	key->ModulusLength = BN_num_bytes(rsa->n);
++	key->ModulusLength = BN_num_bytes(rsan);
+ 	key->Modulus = (BYTE*) malloc(key->ModulusLength);
+-	BN_bn2bin(rsa->n, key->Modulus);
++	BN_bn2bin(rsan, key->Modulus);
+ 	crypto_reverse(key->Modulus, key->ModulusLength);
+ 
+-	key->PrivateExponentLength = BN_num_bytes(rsa->d);
++	key->PrivateExponentLength = BN_num_bytes(rsad);
+ 	key->PrivateExponent = (BYTE*) malloc(key->PrivateExponentLength);
+-	BN_bn2bin(rsa->d, key->PrivateExponent);
++	BN_bn2bin(rsad, key->PrivateExponent);
+ 	crypto_reverse(key->PrivateExponent, key->PrivateExponentLength);
+ 
+ 	memset(key->exponent, 0, sizeof(key->exponent));
+-	BN_bn2bin(rsa->e, key->exponent + sizeof(key->exponent) - BN_num_bytes(rsa->e));
++	BN_bn2bin(rsae, key->exponent + sizeof(key->exponent) - BN_num_bytes(rsae));
+ 	crypto_reverse(key->exponent, sizeof(key->exponent));
+ 
++	BN_free(rsan);
++	BN_free(rsae);
++	BN_free(rsad);
+ 	RSA_free(rsa);
+ 
+ 	return key;
+--- freerdp-1.1.0~git20140921.1.440916e+dfsg1.orig/libfreerdp/crypto/crypto.c
++++ freerdp-1.1.0~git20140921.1.440916e+dfsg1/libfreerdp/crypto/crypto.c
+@@ -82,31 +82,31 @@ void crypto_rc4_free(CryptoRc4 rc4)
+ CryptoDes3 crypto_des3_encrypt_init(const BYTE* key, const BYTE* ivec)
+ {
+ 	CryptoDes3 des3 = malloc(sizeof(*des3));
+-	EVP_CIPHER_CTX_init(&des3->des3_ctx);
+-	EVP_EncryptInit_ex(&des3->des3_ctx, EVP_des_ede3_cbc(), NULL, key, ivec);
+-	EVP_CIPHER_CTX_set_padding(&des3->des3_ctx, 0);
++	EVP_CIPHER_CTX_init(des3->des3_ctx);
++	EVP_EncryptInit_ex(des3->des3_ctx, EVP_des_ede3_cbc(), NULL, key, ivec);
++	EVP_CIPHER_CTX_set_padding(des3->des3_ctx, 0);
+ 	return des3;
+ }
+ 
+ CryptoDes3 crypto_des3_decrypt_init(const BYTE* key, const BYTE* ivec)
+ {
+ 	CryptoDes3 des3 = malloc(sizeof(*des3));
+-	EVP_CIPHER_CTX_init(&des3->des3_ctx);
+-	EVP_DecryptInit_ex(&des3->des3_ctx, EVP_des_ede3_cbc(), NULL, key, ivec);
+-	EVP_CIPHER_CTX_set_padding(&des3->des3_ctx, 0);
++	EVP_CIPHER_CTX_init(des3->des3_ctx);
++	EVP_DecryptInit_ex(des3->des3_ctx, EVP_des_ede3_cbc(), NULL, key, ivec);
++	EVP_CIPHER_CTX_set_padding(des3->des3_ctx, 0);
+ 	return des3;
+ }
+ 
+ void crypto_des3_encrypt(CryptoDes3 des3, UINT32 length, const BYTE* in_data, BYTE* out_data)
+ {
+ 	int len;
+-	EVP_EncryptUpdate(&des3->des3_ctx, out_data, &len, in_data, length);
++	EVP_EncryptUpdate(des3->des3_ctx, out_data, &len, in_data, length);
+ }
+ 
+ void crypto_des3_decrypt(CryptoDes3 des3, UINT32 length, const BYTE* in_data, BYTE* out_data)
+ {
+ 	int len;
+-	EVP_DecryptUpdate(&des3->des3_ctx, out_data, &len, in_data, length);
++	EVP_DecryptUpdate(des3->des3_ctx, out_data, &len, in_data, length);
+ 
+ 	if (length != len)
+ 		abort(); /* TODO */
+@@ -116,30 +116,30 @@ void crypto_des3_free(CryptoDes3 des3)
+ {
+ 	if (des3 == NULL)
+ 		return;
+-	EVP_CIPHER_CTX_cleanup(&des3->des3_ctx);
++	EVP_CIPHER_CTX_free(des3->des3_ctx);
+ 	free(des3);
+ }
+ 
+ CryptoHmac crypto_hmac_new(void)
+ {
+ 	CryptoHmac hmac = malloc(sizeof(*hmac));
+-	HMAC_CTX_init(&hmac->hmac_ctx);
++	hmac->hmac_ctx = HMAC_CTX_new();
+ 	return hmac;
+ }
+ 
+ void crypto_hmac_sha1_init(CryptoHmac hmac, const BYTE* data, UINT32 length)
+ {
+-	HMAC_Init_ex(&hmac->hmac_ctx, data, length, EVP_sha1(), NULL);
++	HMAC_Init_ex(hmac->hmac_ctx, data, length, EVP_sha1(), NULL);
+ }
+ 
+ void crypto_hmac_update(CryptoHmac hmac, const BYTE* data, UINT32 length)
+ {
+-	HMAC_Update(&hmac->hmac_ctx, data, length);
++	HMAC_Update(hmac->hmac_ctx, data, length);
+ }
+ 
+ void crypto_hmac_final(CryptoHmac hmac, BYTE* out_data, UINT32 length)
+ {
+-	HMAC_Final(&hmac->hmac_ctx, out_data, &length);
++	HMAC_Final(hmac->hmac_ctx, out_data, &length);
+ }
+ 
+ void crypto_hmac_free(CryptoHmac hmac)
+@@ -147,7 +147,7 @@ void crypto_hmac_free(CryptoHmac hmac)
+ 	if (hmac == NULL)
+ 		return;
+ 
+-	HMAC_CTX_cleanup(&hmac->hmac_ctx);
++	HMAC_CTX_free(hmac->hmac_ctx);
+ 	free(hmac);
+ }
+ 
+@@ -214,7 +214,7 @@ static int crypto_rsa_common(const BYTE*
+ 	BYTE* input_reverse;
+ 	BYTE* modulus_reverse;
+ 	BYTE* exponent_reverse;
+-	BIGNUM mod, exp, x, y;
++	BIGNUM *mod, *exp, *x, *y;
+ 
+ 	input_reverse = (BYTE*) malloc(2 * key_length + exponent_size);
+ 	modulus_reverse = input_reverse + key_length;
+@@ -228,26 +228,26 @@ static int crypto_rsa_common(const BYTE*
+ 	crypto_reverse(input_reverse, length);
+ 
+ 	ctx = BN_CTX_new();
+-	BN_init(&mod);
+-	BN_init(&exp);
+-	BN_init(&x);
+-	BN_init(&y);
+-
+-	BN_bin2bn(modulus_reverse, key_length, &mod);
+-	BN_bin2bn(exponent_reverse, exponent_size, &exp);
+-	BN_bin2bn(input_reverse, length, &x);
+-	BN_mod_exp(&y, &x, &exp, &mod, ctx);
++	mod = BN_new();
++	exp = BN_new();
++	x = BN_new();
++	y = BN_new();
++
++	BN_bin2bn(modulus_reverse, key_length, mod);
++	BN_bin2bn(exponent_reverse, exponent_size, exp);
++	BN_bin2bn(input_reverse, length, x);
++	BN_mod_exp(y, x, exp, mod, ctx);
+ 
+-	output_length = BN_bn2bin(&y, output);
++	output_length = BN_bn2bin(y, output);
+ 	crypto_reverse(output, output_length);
+ 
+ 	if (output_length < (int) key_length)
+ 		memset(output + output_length, 0, key_length - output_length);
+ 
+-	BN_free(&y);
+-	BN_clear_free(&x);
+-	BN_free(&exp);
+-	BN_free(&mod);
++	BN_free(y);
++	BN_clear_free(x);
++	BN_free(exp);
++	BN_free(mod);
+ 	BN_CTX_free(ctx);
+ 	free(input_reverse);
+ 
+--- freerdp-1.1.0~git20140921.1.440916e+dfsg1.orig/winpr/libwinpr/sspi/NTLM/ntlm.c
++++ freerdp-1.1.0~git20140921.1.440916e+dfsg1/winpr/libwinpr/sspi/NTLM/ntlm.c
+@@ -623,7 +623,7 @@ SECURITY_STATUS SEC_ENTRY ntlm_EncryptMe
+ 	int length;
+ 	void* data;
+ 	UINT32 SeqNo;
+-	HMAC_CTX hmac;
++	HMAC_CTX *hmac;
+ 	BYTE digest[16];
+ 	BYTE checksum[8];
+ 	BYTE* signature;
+@@ -655,12 +655,13 @@ SECURITY_STATUS SEC_ENTRY ntlm_EncryptMe
+ 	CopyMemory(data, data_buffer->pvBuffer, length);
+ 
+ 	/* Compute the HMAC-MD5 hash of ConcatenationOf(seq_num,data) using the client signing key */
+-	HMAC_CTX_init(&hmac);
+-	HMAC_Init_ex(&hmac, context->SendSigningKey, 16, EVP_md5(), NULL);
+-	HMAC_Update(&hmac, (void*) &(SeqNo), 4);
+-	HMAC_Update(&hmac, data, length);
+-	HMAC_Final(&hmac, digest, NULL);
+-	HMAC_CTX_cleanup(&hmac);
++	hmac = HMAC_CTX_new();
++	HMAC_Init_ex(hmac, context->SendSigningKey, 16, EVP_md5(), NULL);
++	HMAC_Update(hmac, (void*) &(SeqNo), 4);
++	HMAC_Update(hmac, data, length);
++	HMAC_Final(hmac, digest, NULL);
++	HMAC_CTX_free(hmac);
++	hmac = NULL;
+ 
+ 	/* Encrypt message using with RC4, result overwrites original buffer */
+ 
+@@ -707,7 +708,7 @@ SECURITY_STATUS SEC_ENTRY ntlm_DecryptMe
+ 	int length;
+ 	void* data;
+ 	UINT32 SeqNo;
+-	HMAC_CTX hmac;
++	HMAC_CTX *hmac;
+ 	BYTE digest[16];
+ 	BYTE checksum[8];
+ 	UINT32 version = 1;
+@@ -746,12 +747,13 @@ SECURITY_STATUS SEC_ENTRY ntlm_DecryptMe
+ 		CopyMemory(data_buffer->pvBuffer, data, length);
+ 
+ 	/* Compute the HMAC-MD5 hash of ConcatenationOf(seq_num,data) using the client signing key */
+-	HMAC_CTX_init(&hmac);
+-	HMAC_Init_ex(&hmac, context->RecvSigningKey, 16, EVP_md5(), NULL);
+-	HMAC_Update(&hmac, (void*) &(SeqNo), 4);
+-	HMAC_Update(&hmac, data_buffer->pvBuffer, data_buffer->cbBuffer);
+-	HMAC_Final(&hmac, digest, NULL);
+-	HMAC_CTX_cleanup(&hmac);
++	hmac = HMAC_CTX_new();
++	HMAC_Init_ex(hmac, context->RecvSigningKey, 16, EVP_md5(), NULL);
++	HMAC_Update(hmac, (void*) &(SeqNo), 4);
++	HMAC_Update(hmac, data_buffer->pvBuffer, data_buffer->cbBuffer);
++	HMAC_Final(hmac, digest, NULL);
++	HMAC_CTX_free(hmac);
++	hmac = NULL;
+ 
+ #ifdef WITH_DEBUG_NTLM
+ 	fprintf(stderr, "Encrypted Data Buffer (length = %d)\n", length);
+--- freerdp-1.1.0~git20140921.1.440916e+dfsg1.orig/winpr/libwinpr/sspi/NTLM/ntlm_compute.c
++++ freerdp-1.1.0~git20140921.1.440916e+dfsg1/winpr/libwinpr/sspi/NTLM/ntlm_compute.c
+@@ -646,19 +646,20 @@ void ntlm_init_rc4_seal_states(NTLM_CONT
+ 
+ void ntlm_compute_message_integrity_check(NTLM_CONTEXT* context)
+ {
+-	HMAC_CTX hmac_ctx;
++	HMAC_CTX *hmac_ctx;
+ 
+ 	/*
+ 	 * Compute the HMAC-MD5 hash of ConcatenationOf(NEGOTIATE_MESSAGE,
+ 	 * CHALLENGE_MESSAGE, AUTHENTICATE_MESSAGE) using the ExportedSessionKey
+ 	 */
+ 
+-	HMAC_CTX_init(&hmac_ctx);
+-	HMAC_Init_ex(&hmac_ctx, context->ExportedSessionKey, 16, EVP_md5(), NULL);
+-	HMAC_Update(&hmac_ctx, context->NegotiateMessage.pvBuffer, context->NegotiateMessage.cbBuffer);
+-	HMAC_Update(&hmac_ctx, context->ChallengeMessage.pvBuffer, context->ChallengeMessage.cbBuffer);
+-	HMAC_Update(&hmac_ctx, context->AuthenticateMessage.pvBuffer, context->AuthenticateMessage.cbBuffer);
+-	HMAC_Final(&hmac_ctx, context->MessageIntegrityCheck, NULL);
+-	HMAC_CTX_cleanup(&hmac_ctx);
++	hmac_ctx = HMAC_CTX_new();
++	HMAC_Init_ex(hmac_ctx, context->ExportedSessionKey, 16, EVP_md5(), NULL);
++	HMAC_Update(hmac_ctx, context->NegotiateMessage.pvBuffer, context->NegotiateMessage.cbBuffer);
++	HMAC_Update(hmac_ctx, context->ChallengeMessage.pvBuffer, context->ChallengeMessage.cbBuffer);
++	HMAC_Update(hmac_ctx, context->AuthenticateMessage.pvBuffer, context->AuthenticateMessage.cbBuffer);
++	HMAC_Final(hmac_ctx, context->MessageIntegrityCheck, NULL);
++	HMAC_CTX_free(hmac_ctx);
++	hmac_ctx = NULL;
+ }
+ 
+--- freerdp-1.1.0~git20140921.1.440916e+dfsg1.orig/winpr/tools/makecert/makecert.c
++++ freerdp-1.1.0~git20140921.1.440916e+dfsg1/winpr/tools/makecert/makecert.c
+@@ -626,7 +626,8 @@ void makecert_context_free(MAKECERT_CONT
+ 
+ 		CRYPTO_cleanup_all_ex_data();
+ 
+-		CRYPTO_mem_leaks(context->bio);
++		// Only available when OPENSSL_NO_CRYPTO_MDEBUG is not defined
++		//CRYPTO_mem_leaks(context->bio);
+ 		BIO_free(context->bio);
+ 
+ 		free(context);
