@@ -20,6 +20,10 @@ PYTHON_REQ_USE="sqlite(+)?"
 inherit distutils-r1 systemd user
 
 REQUIRED_USE="|| ( postgres sqlite )"
+
+# most recent dep change:
+# https://github.com/matrix-org/synapse/commit/4e1c7b79fa3498c48106c17d0edbab2f7bcc0c38#diff-330f0c9df17ab9196f1537b1d625b6bb
+# "Remove the psutil dependency (#6318)"
 RDEPEND=">=dev-python/jsonschema-2.5.1[${PYTHON_USEDEP}]
 		>=dev-python/frozendict-1[${PYTHON_USEDEP}]
 		>=dev-python/unpaddedbase64-1.1.0[${PYTHON_USEDEP}]
