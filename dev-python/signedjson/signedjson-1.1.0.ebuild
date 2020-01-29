@@ -20,7 +20,9 @@ IUSE="test"
 
 RDEPEND=">=dev-python/canonicaljson-1.0.0[${PYTHON_USEDEP}]
 		>=dev-python/unpaddedbase64-1.0.1[${PYTHON_USEDEP}]
-		>=dev-python/pynacl-0.3.0[${PYTHON_USEDEP}]"
+		>=dev-python/pynacl-0.3.0[${PYTHON_USEDEP}]
+		$(python_gen_cond_dep 'dev-python/typing-extensions[${PYTHON_USEDEP}]' python3_{5,6})
+		virtual/python-typing[${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}
 		test? ( dev-python/nose[${PYTHON_USEDEP}] )"
 
