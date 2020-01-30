@@ -82,9 +82,9 @@ src_prepare() {
 	# and replaced with a build step that generates a fresh config.json.  This
 	# is to ensure the initial configuration file has all the correct defaults
 	# provided in the server code.  Existing config.json files are not affected
-	# by this change.
+	# by this change."
 	emake config-reset
-	mv config/config.json config/default.json
+	mv config/config.json config/default.json || die
 
 	# Disable developer settings, fix path, set to listen localhost
 	# and disable diagnostics (call home) by default.
