@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repositories version="1.0">
+    <repo priority="50" status="unofficial">
+        <name>matoro</name>
+        <description>matoro personal overlay</description>
+        <homepage>https://github.com/matoro/overlay</homepage>
+        <owner>
+            <name>matoro</name>
+        </owner>
+        <source type="git">https://github.com/matoro/overlay.git</source>
+    </repo>
+</repositories>
