@@ -13,7 +13,7 @@ SRC_URI="https://apache.org/dyn/closer.cgi?action=download&filename=guacamole/${
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~arm"
-IUSE="vnc rdp ssh telnet guacenc pulseaudio vorbis webp ssl static-libs test doc"
+IUSE="vnc rdp ssh telnet guacenc pulseaudio vorbis webp ssl static-libs doc"
 RESTRICT="mirror network-sandbox"
 REQUIRED_USE="pulseaudio? ( vnc )"
 S="${WORKDIR}"
@@ -24,7 +24,7 @@ RDEPEND="x11-libs/cairo
 		dev-libs/ossp-uuid
 		www-servers/tomcat
 		vnc? ( net-libs/libvncserver )
-		rdp? ( <net-misc/freerdp-2 )
+		rdp? ( net-misc/freerdp:0/2 )
 		ssh? ( net-libs/libssh2
 				dev-libs/openssl
 				x11-libs/pango
@@ -37,7 +37,6 @@ RDEPEND="x11-libs/cairo
 		webp? ( media-libs/libwebp )"
 DEPEND="${RDEPEND}
 		dev-java/maven-bin
-		test? ( dev-util/cunit )
 		doc? ( app-doc/doxygen )"
 
 pkg_setup() {
@@ -76,7 +75,6 @@ src_compile() {
 	# server
 	pushd "${PN}-server-${PV}"
 	default
-	use test && emake -C tests
 	use doc && doxygen doc/Doxyfile || die
 	popd
 
@@ -85,13 +83,6 @@ src_compile() {
 	# javadoc is broken on java 11 & 12
 	# https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8212233
 	mvn -Dmaven.javadoc.skip=true package || die
-	popd
-}
-
-src_test() {
-	# server
-	pushd "${PN}-server-${PV}"
-	LDFLAGS="${LDFLAGS} -lcunit" emake -C tests check || die
 	popd
 }
 
