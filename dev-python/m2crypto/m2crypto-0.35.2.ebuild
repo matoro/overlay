@@ -65,7 +65,7 @@ python_compile() {
 
 	distutils-r1_python_compile --openssl="${ESYSROOT}"/usr
 
-	use doc && emake -C doc html || die
+	use doc && emake -C doc html
 }
 
 python_install_all() {

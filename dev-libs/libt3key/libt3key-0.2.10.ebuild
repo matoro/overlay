@@ -30,7 +30,7 @@ src_configure() {
 
 src_compile() {
 	default
-	use doc && doxygen doc/doxygen.conf
+	use doc && { doxygen doc/doxygen.conf || die ; }
 }
 
 src_install() {

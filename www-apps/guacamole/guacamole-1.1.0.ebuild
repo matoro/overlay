@@ -75,7 +75,7 @@ src_compile() {
 	# server
 	pushd "${PN}-server-${PV}"
 	default
-	use doc && doxygen doc/Doxyfile || die
+	use doc && { doxygen doc/Doxyfile || die ; }
 	popd
 
 	# client
