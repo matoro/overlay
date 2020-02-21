@@ -22,7 +22,6 @@ RDEPEND="x11-libs/cairo
 		virtual/jpeg
 		media-libs/libpng
 		dev-libs/ossp-uuid
-		www-servers/tomcat
 		vnc? ( net-libs/libvncserver )
 		rdp? ( net-misc/freerdp:0/2 )
 		ssh? ( net-libs/libssh2
