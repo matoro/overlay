@@ -17,6 +17,7 @@
 	<use>
 		<flag name="ssh">Enable support for the SSH protocol</flag>
 		<flag name="telnet">Enable support for the Telnet protocol</flag>
+		<flag name="kubernetes">Enable support for Kubernetes</flag>
 		<flag name="guacenc">Build the guacenc utility (translates screen recordings to video)</flag>
 	</use>
 </pkgmetadata>

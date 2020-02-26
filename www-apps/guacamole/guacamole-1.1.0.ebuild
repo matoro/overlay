@@ -13,19 +13,19 @@ SRC_URI="https://apache.org/dyn/closer.cgi?action=download&filename=guacamole/${
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~arm"
-IUSE="vnc rdp ssh telnet guacenc pulseaudio vorbis webp ssl static-libs doc"
+IUSE="vnc rdp ssh telnet guacenc pulseaudio vorbis webp ssl static-libs doc kubernetes"
 RESTRICT="mirror network-sandbox"
-REQUIRED_USE="pulseaudio? ( vnc )"
+REQUIRED_USE="pulseaudio? ( vnc ) ssh? ( ssl ) kubernetes? ( ssl )"
 S="${WORKDIR}"
 
 RDEPEND="x11-libs/cairo
 		virtual/jpeg
 		media-libs/libpng
 		dev-libs/ossp-uuid
+		ssl? ( dev-libs/openssl )
 		vnc? ( net-libs/libvncserver )
 		rdp? ( net-misc/freerdp:0/2 )
 		ssh? ( net-libs/libssh2
-				dev-libs/openssl
 				x11-libs/pango
 		)
 		telnet? ( net-libs/libtelnet
@@ -33,7 +33,10 @@ RDEPEND="x11-libs/cairo
 		)
 		guacenc? ( virtual/ffmpeg )
 		vorbis? ( media-libs/libvorbis )
-		webp? ( media-libs/libwebp )"
+		webp? ( media-libs/libwebp )
+		kubernetes? ( net-libs/libwebsockets
+						x11-libs/pango
+		)"
 DEPEND="${RDEPEND}
 		dev-java/maven-bin
 		doc? ( app-doc/doxygen )"
@@ -47,7 +50,7 @@ src_configure() {
 	# server
 	pushd "${PN}-server-${PV}"
 	TERM_PROTO="without"
-	if use ssh || use telnet
+	if use ssh || use telnet || use kubernetes
 	then
 		TERM_PROTO="with"
 	fi
@@ -66,7 +69,8 @@ src_configure() {
 		$(use_with ssh) \
 		$(use_with telnet) \
 		$(use_with vorbis) \
-		$(use_with webp)
+		$(use_with webp) \
+		$(use_with kubernetes websockets)
 	popd
 }
 
