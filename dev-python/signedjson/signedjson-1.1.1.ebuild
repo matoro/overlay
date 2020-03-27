@@ -8,9 +8,7 @@ inherit distutils-r1
 
 DESCRIPTION="Sign JSON objects with ED25519 signatures"
 HOMEPAGE="https://github.com/matrix-org/python-signedjson https://pypi.python.org/pypi/signedjson"
-SRC_URI="https://github.com/matrix-org/python-signedjson/archive/v${PV}.tar.gz -> ${P}.tar.gz"
-
-S="${WORKDIR}/python-${P}"
+SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -22,8 +20,10 @@ RDEPEND=">=dev-python/canonicaljson-1.0.0[${PYTHON_USEDEP}]
 		>=dev-python/unpaddedbase64-1.0.1[${PYTHON_USEDEP}]
 		>=dev-python/pynacl-0.3.0[${PYTHON_USEDEP}]
 		$(python_gen_cond_dep 'dev-python/typing-extensions[${PYTHON_USEDEP}]' python3_{5,6})
-		virtual/python-typing[${PYTHON_USEDEP}]"
+		virtual/python-typing[${PYTHON_USEDEP}]
+		dev-python/importlib_metadata[${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}
+		dev-python/setuptools_scm[${PYTHON_USEDEP}]
 		test? ( dev-python/nose[${PYTHON_USEDEP}] )"
 
 python_test() {
