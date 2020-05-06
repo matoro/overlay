@@ -50,10 +50,10 @@ src_prepare() {
 	# misc nodejs compat issues
 
 	# bump sqlite3 to 4.1.1
-	sed -i "s/\"sqlite3\": \"^4.0.2\"/\"sqlite3\": \"^4.1.1\"/g" "package.json" || die
+	sed -i "s/\"sqlite3\": \"^4.0.2\"/\"sqlite3\": \"^4.2.0\"/g" "package.json" || die
 
 	# swap unmaintained unzip to unzipper to fix too-old graceful-fs
-	sed -i "s/\"unzip\": \"^0\.1\.11\"/\"unzipper\": \"0\.10\.10\"/g" "package.json" || die
+	sed -i "s/\"unzip\": \"^0\.1\.11\"/\"unzipper\": \"0\.10\.11\"/g" "package.json" || die
 	sed -i "s/require('unzip')/require('unzipper')/g" wiseService/source.{threatq,threatstream}.js viewer/viewer.js || die
 
 	npm install --package-lock-only || die
