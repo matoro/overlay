@@ -1,7 +1,7 @@
 # Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 PYTHON_COMPAT=( python2_7 python3_{5,6,7,8} pypy{,3} )
 inherit distutils-r1
 
@@ -16,25 +16,25 @@ IUSE="doc test"
 RESTRICT="mirror"
 
 COMMON_DEPEND="dev-python/setuptools[${PYTHON_USEDEP}]
-	dev-python/incremental[${PYTHON_USEDEP}]
-"
+	dev-python/incremental[${PYTHON_USEDEP}]"
 
 RDEPEND="${COMMON_DEPEND}
-	$(python_gen_cond_dep 'dev-python/enum34[${PYTHON_USEDEP}]' python2_7)
+	>=dev-python/requests-2.1.0[${PYTHON_USEDEP}]
+	>=dev-python/hyperlink-19.0.0[${PYTHON_USEDEP}]
 	dev-python/six[${PYTHON_USEDEP}]
 	>=dev-python/twisted-16.4.0[crypt,${PYTHON_USEDEP}]
-	>=dev-python/requests-2.1.0[${PYTHON_USEDEP}]
-	dev-python/attrs[${PYTHON_USEDEP}]
-"
+	$(python_gen_cond_dep '>=dev-python/twisted-16.4.0[crypt,${PYTHON_USEDEP}]' python{2_7,3_{5,6}})
+	$(python_gen_cond_dep '>=dev-python/twisted-18.7.0[crypt,${PYTHON_USEDEP}]' python3_{7,8})
+	dev-python/attrs[${PYTHON_USEDEP}]"
 
 DEPEND="${COMMON_DEPEND}
 	doc? ( dev-python/sphinx
 		${RDEPEND} )
 	test? (
 		dev-python/mock[${PYTHON_USEDEP}]
-		dev-python/pyflakes[${PYTHON_USEDEP}]
 		dev-python/pep8[${PYTHON_USEDEP}]
-		dev-python/httpbin[${PYTHON_USEDEP}]
+		dev-python/pyflakes[${PYTHON_USEDEP}]
+		>=dev-python/httpbin-0.5.0[${PYTHON_USEDEP}]
 	)"
 
 python_compile_all() {
@@ -50,7 +50,7 @@ test_instructions(){
 	ewarn "The 'test' USE flag and FEATURE only ensures that the correct"
 	ewarn "dependenciess are installed for this package."
 	ewarn "Please run eg:"
-	ewarn "$ python3.4 /usr/bin/trial treq"
+	ewarn "$ ${EPYTHON} /usr/bin/trial treq"
 	ewarn "as a user for each of the python versions it is installed to"
 	ewarn "to correctly test this package."
 }
