@@ -48,6 +48,7 @@ RDEPEND="
 	x11-apps/xrandr
 	x11-libs/gtk+:3[introspection]
 	x11-libs/libnotify
+	x11-libs/gdk-pixbuf[jpeg]
 "
 
 python_install_all() {
