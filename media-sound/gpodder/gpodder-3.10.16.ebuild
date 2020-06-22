@@ -16,7 +16,7 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~amd64-linux ~x86-linux ~x86-solaris"
 IUSE="+dbus bluetooth kernel_linux mtp test"
-RESTRICT="!test? ( test )"
+RESTRICT="!test? ( test ) mirror"
 
 # As in Fedora: re-enable >=dev-python/eyeD3-0.7[${PYTHON_MULTI_USEDEP}] and
 # ipod? ( media-libs/libgpod[python,${PYTHON_MULTI_USEDEP}] ) once they
