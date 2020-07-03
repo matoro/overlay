@@ -4,8 +4,8 @@
 EAPI=7
 
 # Change this when you update the ebuild
-GIT_COMMIT="3eb4c9fce8bae1da3fc6a6dbe9735c894c1bfb42"
-WEBAPP_COMMIT="bff5cad278fc412e783cf604cbd0b9ca4edef08d"
+GIT_COMMIT="2c394d78ca036a439aa06fedd6ad187da535d5fc"
+WEBAPP_COMMIT="d680c73ace274c55119103075ba079225ee96d50"
 EGO_PN="github.com/mattermost/${PN}"
 WEBAPP_P="mattermost-webapp-${PV}"
 MY_PV="${PV/_/-}"
@@ -145,7 +145,7 @@ src_compile() {
 	)
 
 	pushd client > /dev/null || die
-	emake build
+	NODE_OPTIONS="max_old_space_size=4196" emake build
 	if use npm-audit && [[ $(npm --version) =~ 6.* ]]; then
 		ebegin "Attempting to fix potential vulnerabilities"
 		npm audit fix --package-lock-only
