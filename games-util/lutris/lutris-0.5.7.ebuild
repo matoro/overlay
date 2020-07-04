@@ -23,7 +23,7 @@ fi
 LICENSE="GPL-3"
 SLOT="0"
 
-RESTRICT="!test? ( test )"
+RESTRICT="!test? ( test ) mirror"
 
 BDEPEND="
 	test? ( dev-python/nose[${PYTHON_USEDEP}] )
