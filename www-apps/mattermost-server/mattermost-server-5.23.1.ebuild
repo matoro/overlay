@@ -145,7 +145,7 @@ src_compile() {
 	)
 
 	pushd client > /dev/null || die
-	NODE_OPTIONS="max_old_space_size=4196" emake build
+	emake build
 	if use npm-audit && [[ $(npm --version) =~ 6.* ]]; then
 		ebegin "Attempting to fix potential vulnerabilities"
 		npm audit fix --package-lock-only
