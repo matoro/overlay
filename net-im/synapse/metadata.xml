@@ -14,7 +14,6 @@
 	</longdescription>
 	<use>
 		<flag name="acme">Enable ACME support for TLS cert provisioning</flag><!--https://github.com/matrix-org/synapse/blob/master/docs/ACME.md-->
-		<flag name="consent">Enable support for TOS consent tracking</flag><!--https://github.com/matrix-org/synapse/blob/master/docs/consent_tracking.md-->
 		<flag name="jwt">Enable support for JWT login</flag>
 		<flag name="mail">Enable e-mail notification support</flag>
 		<flag name="oidc">Enable support for OpenID Connect SSO authentication </flag> <!--https://github.com/matrix-org/synapse/blob/develop/docs/sso_mapping_providers.md-->

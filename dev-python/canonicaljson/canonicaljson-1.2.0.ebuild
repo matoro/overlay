@@ -3,7 +3,7 @@
 
 EAPI=6
 
-PYTHON_COMPAT=( python{2_7,3_{5,6,7,8}} )
+PYTHON_COMPAT=( python3_{5,6,7,8,9} pypy3 )
 inherit distutils-r1
 
 DESCRIPTION="Unpadded Base64"
@@ -19,8 +19,7 @@ RESTRICT="mirror"
 IUSE="test"
 
 RDEPEND=">=dev-python/simplejson-3.6.5[${PYTHON_USEDEP}]
-		>=dev-python/frozendict-1.0[${PYTHON_USEDEP}]
-		dev-python/six[${PYTHON_USEDEP}]"
+		>=dev-python/frozendict-1.0[${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}
 		dev-python/nose[${PYTHON_USEDEP}]"
 

@@ -57,7 +57,7 @@ RDEPEND=">=dev-python/jsonschema-2.5.1[${PYTHON_USEDEP}]
 		consent? ( >=dev-python/jinja-2.9[${PYTHON_USEDEP}] )
 		acme? (
 			>=dev-python/txacme-0.9.2[${PYTHON_USEDEP}]
-			$(python_gen_cond_dep '<dev-python/eliot-1.8.0' python3_5)
+			$(python_gen_cond_dep '<dev-python/eliot-1.8.0[${PYTHON_USEDEP}]' python3_5)
 		)
 		saml? ( >=dev-python/pysaml2-4.5.0[${PYTHON_USEDEP}] )
 		systemd? ( >=dev-python/python-systemd-231[${PYTHON_USEDEP}] )
