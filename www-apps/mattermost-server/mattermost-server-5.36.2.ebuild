@@ -4,16 +4,15 @@
 EAPI=7
 
 # Change this when you update the ebuild
-GIT_COMMIT="35ce42d96c2066cf083cb5b5c059d98506ce3cd3"
-WEBAPP_COMMIT="69386f97d80a1c6cbb7fed422922a378a1c8ef71"
+GIT_COMMIT="7b1080f7ebdaf826da7e3a17b66a5c682142c404"
+WEBAPP_COMMIT="c3db740d5d654cf0eea44288151af94c0f99150c"
 EGO_PN="github.com/mattermost/${PN}"
 WEBAPP_P="mattermost-webapp-${PV}"
 MY_PV="${PV/_/-}"
 
 if [[ "$ARCH" != "x86" && "$ARCH" != "amd64" ]]; then
 	INHERIT="autotools"
-	DEPEND="media-libs/libpng:0
-			dev-lang/python:2.7"
+	DEPEND="media-libs/libpng:0"
 fi
 
 inherit ${INHERIT} golang-vcs-snapshot-r1 systemd user
