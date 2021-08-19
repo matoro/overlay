@@ -3,7 +3,7 @@
 
 EAPI=6
 
-PYTHON_COMPAT=( python2_7 python3_{5,6,7,8} pypy{,3} )
+PYTHON_COMPAT=( python2_7 python3_{5,6,7,8,9} pypy{,3} )
 inherit distutils-r1
 
 DESCRIPTION="Sign JSON objects with ED25519 signatures"
@@ -20,7 +20,7 @@ RDEPEND=">=dev-python/canonicaljson-1.0.0[${PYTHON_USEDEP}]
 		>=dev-python/unpaddedbase64-1.0.1[${PYTHON_USEDEP}]
 		>=dev-python/pynacl-0.3.0[${PYTHON_USEDEP}]
 		$(python_gen_cond_dep 'dev-python/typing-extensions[${PYTHON_USEDEP}]' python3_{5,6})
-		virtual/python-typing[${PYTHON_USEDEP}]
+		$(python_gen_cond_dep 'dev-python/typing[${PYTHON_USEDEP}]' 'python2*' pypy)
 		dev-python/importlib_metadata[${PYTHON_USEDEP}]"
 DEPEND="${RDEPEND}
 		dev-python/setuptools_scm[${PYTHON_USEDEP}]
