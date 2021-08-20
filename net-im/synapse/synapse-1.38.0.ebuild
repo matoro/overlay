@@ -10,7 +10,7 @@ SRC_URI="https://github.com/matrix-org/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.g
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~arm"
-IUSE="acme jwt ldap mail oidc opentracing postgres redis saml sentry +sqlite systemd test urlpreview"
+IUSE="jwt ldap mail oidc opentracing postgres redis saml sentry +sqlite systemd test urlpreview"
 # postgres tests run only against prod instance or docker
 RESTRICT="mirror postgres? ( test )"
 
@@ -23,8 +23,8 @@ inherit distutils-r1 systemd user
 
 REQUIRED_USE="|| ( postgres sqlite )"
 
-# https://github.com/matrix-org/synapse/pull/9946
-# "Unpin attrs dep after new version has been released"
+# https://github.com/matrix-org/synapse/pull/10194
+# "Remove support for ACME v1"
 RDEPEND=">=dev-python/jsonschema-2.5.1[${PYTHON_USEDEP}]
 		>=dev-python/frozendict-1[${PYTHON_USEDEP}]
 		>=dev-python/unpaddedbase64-1.1.0[${PYTHON_USEDEP}]
@@ -46,13 +46,14 @@ RDEPEND=">=dev-python/jsonschema-2.5.1[${PYTHON_USEDEP}]
 		>=dev-python/msgpack-0.5.2[${PYTHON_USEDEP}]
 		>=dev-python/phonenumbers-8.2.0[${PYTHON_USEDEP}]
 		>=dev-python/prometheus_client-0.4.0[${PYTHON_USEDEP}]
-		>=dev-python/attrs-19.1.0[${PYTHON_USEDEP}]
+		>=dev-python/attrs-19.2.0[${PYTHON_USEDEP}]
 		!~dev-python/attrs-21.1.0[${PYTHON_USEDEP}]
 		>=dev-python/netaddr-0.7.18[${PYTHON_USEDEP}]
 		>=dev-python/jinja-2.9[${PYTHON_USEDEP}]
 		>=dev-python/bleach-1.4.3[${PYTHON_USEDEP}]
 		>=dev-python/typing-extensions-3.7.4[${PYTHON_USEDEP}]
 		>=dev-python/cryptography-3.4.7[${PYTHON_USEDEP}]
+		>=dev-python/ijson-3.0[${PYTHON_USEDEP}]
 		sqlite? ( >=dev-db/sqlite-3.11[${PYTHON_USEDEP}] )
 		ldap? ( >=dev-python/matrix-synapse-ldap3-0.1[${PYTHON_USEDEP}] )
 		postgres? (
@@ -60,7 +61,6 @@ RDEPEND=">=dev-python/jsonschema-2.5.1[${PYTHON_USEDEP}]
 			$(python_gen_cond_dep '>=dev-python/psycopg2cffi-2.8[${PYTHON_USEDEP}]' pypy3)
 			$(python_gen_cond_dep '=dev-python/psycopg2cffi-compat-1.1[${PYTHON_USEDEP}]' pypy3)
 		)
-		acme? ( >=dev-python/txacme-0.9.2[${PYTHON_USEDEP}] )
 		saml? ( >=dev-python/pysaml2-4.5.0[${PYTHON_USEDEP}] )
 		systemd? ( >=dev-python/python-systemd-231[${PYTHON_USEDEP}] )
 		urlpreview? ( >=dev-python/lxml-3.5.0[${PYTHON_USEDEP}] )

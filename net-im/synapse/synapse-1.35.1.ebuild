@@ -23,8 +23,8 @@ inherit distutils-r1 systemd user
 
 REQUIRED_USE="|| ( postgres sqlite )"
 
-# https://github.com/matrix-org/synapse/pull/9946
-# "Unpin attrs dep after new version has been released"
+# https://github.com/matrix-org/synapse/pull/9958
+# "Use ijson to parse the response to /send_join, reducing memory usage."
 RDEPEND=">=dev-python/jsonschema-2.5.1[${PYTHON_USEDEP}]
 		>=dev-python/frozendict-1[${PYTHON_USEDEP}]
 		>=dev-python/unpaddedbase64-1.1.0[${PYTHON_USEDEP}]
@@ -53,6 +53,7 @@ RDEPEND=">=dev-python/jsonschema-2.5.1[${PYTHON_USEDEP}]
 		>=dev-python/bleach-1.4.3[${PYTHON_USEDEP}]
 		>=dev-python/typing-extensions-3.7.4[${PYTHON_USEDEP}]
 		>=dev-python/cryptography-3.4.7[${PYTHON_USEDEP}]
+		>=dev-python/ijson-3.0[${PYTHON_USEDEP}]
 		sqlite? ( >=dev-db/sqlite-3.11[${PYTHON_USEDEP}] )
 		ldap? ( >=dev-python/matrix-synapse-ldap3-0.1[${PYTHON_USEDEP}] )
 		postgres? (
