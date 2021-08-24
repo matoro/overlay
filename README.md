@@ -1,6 +1,6 @@
 ## matoro's gentoo overlay
 
-My personal Gentoo overlay.  Contains some interesting apps/services and manual bumps of in-tree ebuilds not yet supporting Python 3.8.
+My personal Gentoo overlay.  Contains some interesting apps/services and manual bumps of in-tree ebuilds not yet supporting the latest Python.
 
 You may be interested in:
 
