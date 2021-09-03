@@ -15,7 +15,7 @@ S="${WORKDIR}/python-${P}"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="~amd64 ~x86 ~arm"
+KEYWORDS="~amd64 ~x86 ~arm ~ppc64"
 IUSE="test"
 RESTRICT="mirror"
 
