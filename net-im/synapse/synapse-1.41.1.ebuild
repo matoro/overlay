@@ -9,7 +9,7 @@ SRC_URI="https://github.com/matrix-org/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.g
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="~amd64 ~x86 ~arm"
+KEYWORDS="~amd64 ~x86 ~arm ~ppc64"
 IUSE="jwt ldap mail oidc opentracing postgres redis saml sentry +sqlite systemd test urlpreview"
 # postgres tests run only against prod instance or docker
 RESTRICT="mirror postgres? ( test )"
