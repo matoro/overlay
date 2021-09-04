@@ -10,10 +10,10 @@ EGO_PN="github.com/mattermost/${PN}"
 WEBAPP_P="mattermost-webapp-${PV}"
 MY_PV="${PV/_/-}"
 
-if [[ "$ARCH" != "x86" && "$ARCH" != "amd64" ]]; then
-	INHERIT="autotools"
-	DEPEND="media-libs/libpng:0"
-fi
+if [[ "$ARCH" != "x86" && "$ARCH" != "amd64" ]]; then UNSUPPORTED_ARCH="1" ; fi
+[[ -z "${UNSUPPORTED_ARCH}" ]] || INHERIT="autotools"
+[[ "${ARCH}" == "ppc64" ]] && INHERIT="${INHERIT} flag-o-matic"
+[[ -z "${UNSUPPORTED_ARCH}" ]] || DEPEND="media-libs/libpng:0"
 
 inherit ${INHERIT} golang-vcs-snapshot-r1 systemd user
 
@@ -27,7 +27,7 @@ RESTRICT="mirror test"
 
 LICENSE="AGPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~arm64 ~x86" # Untested: arm64 x86
+KEYWORDS="~amd64 ~arm ~arm64 ~x86 ~ppc64" # Untested: arm64 x86
 IUSE="+npm-audit debug pie static"
 
 DEPEND="${DEPEND}
@@ -50,7 +50,7 @@ pkg_pretend() {
 			die "[network-sandbox] is enabled in FEATURES"
 		fi
 
-		if use npm-audit && [[ $(npm --version) != 6.* ]]; then
+		if use npm-audit && [[ $(npm --version | cut -d "." -f 1) -lt 6 ]]; then
 			ewarn
 			ewarn "npm v6 is required to run 'npm audit', which is a new command that"
 			ewarn "performs security reports and tries to fix known vulnerabilities"
@@ -144,10 +144,16 @@ src_compile() {
 	)
 
 	pushd client > /dev/null || die
-	emake build
-	if use npm-audit && [[ $(npm --version) =~ 6.* ]]; then
+	# https://git.powerel.org/powerel7/web/src/branch/master/SPECS/mattermost.spec
+	npm install --save || die
+	git clone --depth=1 "https://github.com/imagemin/optipng-bin" node_modules/optipng-bin || die
+	sed 's/--with-system-zlib/--with-system-zlib --with-system-libpng/' -i node_modules/optipng-bin/lib/install.js || die
+	npm rebuild || die
+	npm install imagemin-optipng imagemin-gifsicle || die
+	npm run build || die
+	if use npm-audit && [[ $(npm --version | cut -d "." -f 1) -gt 5 ]]; then
 		ebegin "Attempting to fix potential vulnerabilities"
-		npm audit fix --package-lock-only
+		npm audit fix --package-lock-only || true
 		eend $? || die
 	fi
 	popd > /dev/null || die
