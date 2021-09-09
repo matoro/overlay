@@ -178,22 +178,14 @@ src_install() {
 	insinto /usr/share/mattermost
 	doins -r {fonts,i18n,templates}
 
-	# timezones.json deprecated
-	# https://mattermost.atlassian.net/browse/MM-14260
-	# https://github.com/mattermost/mattermost-server/pull/10311
-	#insinto /usr/share/mattermost/config
-	#doins config/timezones.json
-
 	insinto /usr/share/mattermost/client
 	doins -r client/dist/*
 
 	diropts -o mattermost -g mattermost -m 0750
-	keepdir /var/{lib,log}/mattermost
-	keepdir /var/lib/mattermost/client
+	keepdir /var/log/mattermost
 
 	dosym ../libexec/mattermost/bin/mattermost /usr/bin/mattermost
 	dosym ../../../../etc/mattermost/config.json /usr/libexec/mattermost/config/config.json
-	#dosym ../../../share/mattermost/config/timezones.json /usr/libexec/mattermost/config/timezones.json
 	dosym ../../share/mattermost/fonts /usr/libexec/mattermost/fonts
 	dosym ../../share/mattermost/i18n /usr/libexec/mattermost/i18n
 	dosym ../../share/mattermost/templates /usr/libexec/mattermost/templates
