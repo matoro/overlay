@@ -92,16 +92,20 @@ python_install() {
 	distutils-r1_python_install --skip-build
 	dodir \
 		/etc/${PN} \
+		/var/lib/${PN} \
 		/var/log/${PN}
 	keepdir \
 		/etc/${PN} \
+		/var/lib/${PN} \
 		/var/log/${PN}
 	systemd_dounit "contrib/systemd/matrix-${PN}.service"
 	insinto /etc/${PN}
 	doins "contrib/systemd/log_config.yaml"
 	fowners ${PN}:${PN} \
 		/etc/${PN} \
+		/var/lib/${PN} \
 		/var/log/${PN}
+	fperms 0700 "/var/lib/${PN}"
 	fperms 0750 "/var/log/${PN}"
 	newinitd "${FILESDIR}/${PN}.init.d" "${PN}"
 	newconfd "${FILESDIR}/${PN}.confd" "${PN}"
