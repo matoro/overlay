@@ -4,8 +4,8 @@
 EAPI=7
 
 # Change this when you update the ebuild
-GIT_COMMIT="cc3edaef3420b785e8e0889edfc122881fc147dc"
-WEBAPP_COMMIT="b479e0b337ca9abcb97e5e7ba2f9646d557e8f20"
+GIT_COMMIT="c8f0834b58b345dd170b1b6cf4bb531a7fc9f5dc"
+WEBAPP_COMMIT="1f83feaabe840520f6f5385dfbb2ca4a526aade5"
 EGO_PN="github.com/mattermost/${PN}"
 WEBAPP_P="mattermost-webapp-${PV}"
 MY_PV="${PV/_/-}"
@@ -15,7 +15,7 @@ if [[ "$ARCH" != "x86" && "$ARCH" != "amd64" ]]; then UNSUPPORTED_ARCH="1" ; fi
 [[ "${ARCH}" == "ppc64" ]] && INHERIT="${INHERIT} flag-o-matic"
 [[ -z "${UNSUPPORTED_ARCH}" ]] || DEPEND="media-libs/libpng:0"
 
-inherit ${INHERIT} golang-vcs-snapshot-r1 systemd user
+inherit ${INHERIT} golang-vcs-snapshot-r1 systemd user flag-o-matic
 
 DESCRIPTION="Open source Slack-alternative in Golang and React (Team Edition)"
 HOMEPAGE="https://mattermost.com"
@@ -144,13 +144,9 @@ src_compile() {
 	)
 
 	pushd client > /dev/null || die
-	# https://git.powerel.org/powerel7/web/src/branch/master/SPECS/mattermost.spec
-	npm install --save || die
-	git clone --depth=1 "https://github.com/imagemin/optipng-bin" node_modules/optipng-bin || die
-	sed 's/--with-system-zlib/--with-system-zlib --with-system-libpng/' -i node_modules/optipng-bin/lib/install.js || die
-	npm rebuild || die
-	npm install imagemin-optipng imagemin-gifsicle || die
-	npm run build || die
+	( use arm || use arm64 ) && append-cppflags "-DPNG_ARM_NEON_OPT=0"
+	( use ppc || use ppc64 ) && append-cppflags "-DPNG_POWERPC_VSX_OPT=0"
+	emake build
 	if use npm-audit && [[ $(npm --version | cut -d "." -f 1) -gt 5 ]]; then
 		ebegin "Attempting to fix potential vulnerabilities"
 		npm audit fix --package-lock-only || true
