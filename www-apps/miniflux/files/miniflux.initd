@@ -1,0 +1,15 @@
+#!/sbin/openrc-run
+# Copyright 2021 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+name="miniflux daemon"
+description=""
+command=/usr/bin/miniflux
+command_args="${MINIFLUX_OPTS}"
+command_background=true
+pidfile="${EROOT}/run/${RC_SVCNAME}.pid"
+required_files="${EROOT}/etc/${RC_SVCNAME}.conf"
+
+depend() {
+	use net
+}
