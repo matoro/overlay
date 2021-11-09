@@ -9,6 +9,7 @@ command_args="${MINIFLUX_OPTS}"
 command_background=true
 pidfile="${EROOT}/run/${RC_SVCNAME}.pid"
 required_files="${EROOT}/etc/${RC_SVCNAME}.conf"
+command_user="miniflux:miniflux"
 
 depend() {
 	use net
