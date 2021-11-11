@@ -5,6 +5,7 @@ My personal Gentoo overlay.  Contains some interesting apps/services and manual 
 You may be interested in:
 
 * app-editors/tilde: "An intuitive text editor for the terminal"
+* mail-mta/maddy: "Composable all-in-one mail server"
 * media-sound/airsonic-bin: "Airsonic, a Free and Open Source community driven media server"
 * net-analyzer/moloch: "Open source, large scale, full packet capturing, indexing, and database system" (requires pentoo overlay)
 * net-im/synapse: "Matrix reference homeserver"

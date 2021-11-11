@@ -1,0 +1,16 @@
+#!/sbin/openrc-run
+# Copyright 2021 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+name="maddy daemon"
+description=""
+command=/usr/bin/maddy
+command_args="${MADDY_OPTS}"
+command_background=true
+pidfile="${EROOT}/run/${RC_SVCNAME}.pid"
+required_files="${EROOT}/etc/${RC_SVCNAME}/${RC_SVCNAME}.conf"
+command_user="${RC_SVCNAME}:${RC_SVCNAME}"
+
+depend() {
+	use net
+}
