@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit git-r3 bash-completion-r1
+inherit git-r3 bash-completion-r1 flag-o-matic
 
 DESCRIPTION="DPAA2 Resource Management Tool"
 HOMEPAGE="https://source.codeaurora.org/external/qoriq/qoriq-components/restool/about/"
@@ -19,6 +19,7 @@ KEYWORDS="~arm64"
 IUSE="doc"
 BDEPEND="doc? ( app-text/pandoc )"
 
+append-cflags "-Wno-error=maybe-uninitialized"
 export EXTRA_CFLAGS="${CFLAGS}"
 
 src_install() {
