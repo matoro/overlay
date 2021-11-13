@@ -988,6 +988,6 @@ src_install() {
 	insinto "/etc/${PN}"
 	newins "build/${PN}.conf" "${PN}.conf"
 	fowners -R "${PN}:${PN}" "/etc/${PN}"
-	fperms "0750" "/etc/${PN}"
+	fperms "0770" "/etc/${PN}"
 	fperms "0640" "/etc/${PN}/${PN}.conf"
 }
