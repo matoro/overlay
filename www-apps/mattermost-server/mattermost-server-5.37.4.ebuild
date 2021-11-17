@@ -4,18 +4,18 @@
 EAPI=7
 
 # Change this when you update the ebuild
-GIT_COMMIT="c8f0834b58b345dd170b1b6cf4bb531a7fc9f5dc"
-WEBAPP_COMMIT="1f83feaabe840520f6f5385dfbb2ca4a526aade5"
+GIT_COMMIT="4686a323b092207965998c775e1d17e90d0e8a49"
+WEBAPP_COMMIT="4abfbf424bb51fb43be9a7986aeacacbfaaea460"
 EGO_PN="github.com/mattermost/${PN}"
 WEBAPP_P="mattermost-webapp-${PV}"
 MY_PV="${PV/_/-}"
 
-if [[ "$ARCH" != "x86" && "$ARCH" != "amd64" ]]; then UNSUPPORTED_ARCH="1" ; fi
-[[ -z "${UNSUPPORTED_ARCH}" ]] || INHERIT="autotools"
-[[ "${ARCH}" == "ppc64" ]] && INHERIT="${INHERIT} flag-o-matic"
-[[ -z "${UNSUPPORTED_ARCH}" ]] || DEPEND="media-libs/libpng:0"
+if [[ "$ARCH" != "x86" && "$ARCH" != "amd64" ]]; then
+	INHERIT="autotools"
+	DEPEND="media-libs/libpng:0"
+fi
 
-inherit ${INHERIT} golang-vcs-snapshot-r1 systemd user flag-o-matic
+inherit ${INHERIT} golang-vcs-snapshot-r1 systemd user
 
 DESCRIPTION="Open source Slack-alternative in Golang and React (Team Edition)"
 HOMEPAGE="https://mattermost.com"
@@ -27,7 +27,7 @@ RESTRICT="mirror test"
 
 LICENSE="AGPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~arm64 ~x86 ~ppc64" # Untested: arm64 x86
+KEYWORDS="~amd64 ~arm ~arm64 ~x86" # Untested: arm64 x86
 IUSE="+npm-audit debug pie static"
 
 DEPEND="${DEPEND}
@@ -50,7 +50,7 @@ pkg_pretend() {
 			die "[network-sandbox] is enabled in FEATURES"
 		fi
 
-		if use npm-audit && [[ $(npm --version | cut -d "." -f 1) -lt 6 ]]; then
+		if use npm-audit && [[ $(npm --version) != 6.* ]]; then
 			ewarn
 			ewarn "npm v6 is required to run 'npm audit', which is a new command that"
 			ewarn "performs security reports and tries to fix known vulnerabilities"
@@ -144,12 +144,10 @@ src_compile() {
 	)
 
 	pushd client > /dev/null || die
-	( use arm || use arm64 ) && append-cppflags "-DPNG_ARM_NEON_OPT=0"
-	( use ppc || use ppc64 ) && append-cppflags "-DPNG_POWERPC_VSX_OPT=0"
 	emake build
-	if use npm-audit && [[ $(npm --version | cut -d "." -f 1) -gt 5 ]]; then
+	if use npm-audit && [[ $(npm --version) =~ 6.* ]]; then
 		ebegin "Attempting to fix potential vulnerabilities"
-		npm audit fix --package-lock-only || true
+		npm audit fix --package-lock-only
 		eend $? || die
 	fi
 	popd > /dev/null || die
@@ -174,6 +172,12 @@ src_install() {
 	insinto /usr/share/mattermost
 	doins -r {fonts,i18n,templates}
 
+	# timezones.json deprecated
+	# https://mattermost.atlassian.net/browse/MM-14260
+	# https://github.com/mattermost/mattermost-server/pull/10311
+	#insinto /usr/share/mattermost/config
+	#doins config/timezones.json
+
 	insinto /usr/share/mattermost/client
 	doins -r client/dist/*
 
@@ -183,6 +187,7 @@ src_install() {
 
 	dosym ../libexec/mattermost/bin/mattermost /usr/bin/mattermost
 	dosym ../../../../etc/mattermost/config.json /usr/libexec/mattermost/config/config.json
+	#dosym ../../../share/mattermost/config/timezones.json /usr/libexec/mattermost/config/timezones.json
 	dosym ../../share/mattermost/fonts /usr/libexec/mattermost/fonts
 	dosym ../../share/mattermost/i18n /usr/libexec/mattermost/i18n
 	dosym ../../share/mattermost/templates /usr/libexec/mattermost/templates
