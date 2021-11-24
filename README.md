@@ -10,5 +10,4 @@ You may be interested in:
 * net-analyzer/moloch: "Open source, large scale, full packet capturing, indexing, and database system" (requires pentoo overlay)
 * net-im/synapse: "Matrix reference homeserver"
 * net-misc/restool: "A user space application providing the ability to dynamically create and manage DPAA2 containers and objects from Linux"
-* www-apps/guacamole: "A clientless HTML5 remote desktop gateway"
 * www-apps/mattermost-server: "Open source Slack-alternative on Golang and React (Team Edition)" (requires chaoslab overlay)
