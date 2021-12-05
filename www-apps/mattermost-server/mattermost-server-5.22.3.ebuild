@@ -16,7 +16,7 @@ if [[ "$ARCH" != "x86" && "$ARCH" != "amd64" ]]; then
 			dev-lang/python:2.7"
 fi
 
-inherit ${INHERIT} golang-vcs-snapshot-r1 systemd user
+inherit ${INHERIT} golang-vcs-snapshot systemd user
 
 DESCRIPTION="Open source Slack-alternative in Golang and React (Team Edition)"
 HOMEPAGE="https://mattermost.com"
@@ -66,7 +66,7 @@ pkg_setup() {
 }
 
 src_unpack() {
-	golang-vcs-snapshot-r1_src_unpack
+	golang-vcs-snapshot_src_unpack
 	cd "${S}" || die
 	unpack "${WEBAPP_P}.tar.gz"
 	mv "${WEBAPP_P/_/-}" client || die

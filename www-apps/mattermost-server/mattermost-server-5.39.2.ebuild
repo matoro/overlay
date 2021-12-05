@@ -15,7 +15,7 @@ if [[ "$ARCH" != "x86" && "$ARCH" != "amd64" ]]; then UNSUPPORTED_ARCH="1" ; fi
 [[ "${ARCH}" == "ppc64" ]] && INHERIT="${INHERIT} flag-o-matic"
 [[ -z "${UNSUPPORTED_ARCH}" ]] || DEPEND="media-libs/libpng:0"
 
-inherit ${INHERIT} golang-vcs-snapshot-r1 systemd user flag-o-matic
+inherit ${INHERIT} golang-vcs-snapshot systemd user flag-o-matic
 
 DESCRIPTION="Open source Slack-alternative in Golang and React (Team Edition)"
 HOMEPAGE="https://mattermost.com"
@@ -65,7 +65,7 @@ pkg_setup() {
 }
 
 src_unpack() {
-	golang-vcs-snapshot-r1_src_unpack
+	golang-vcs-snapshot_src_unpack
 	cd "${S}" || die
 	unpack "${WEBAPP_P}.tar.gz"
 	mv "${WEBAPP_P/_/-}" client || die

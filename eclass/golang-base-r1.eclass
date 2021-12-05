@@ -1,1 +1,0 @@
-/var/lib/layman/chaoslab/eclass/golang-base-r1.eclass

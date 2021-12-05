@@ -1,1 +1,0 @@
-/var/lib/layman/chaoslab/eclass/golang-vcs-snapshot-r1.eclass
