@@ -11,3 +11,12 @@ You may be interested in:
 * net-im/synapse: "Matrix reference homeserver"
 * net-misc/restool: "A user space application providing the ability to dynamically create and manage DPAA2 containers and objects from Linux"
 * www-apps/mattermost-server: "Open source Slack-alternative on Golang and React (Team Edition)"
+
+
+#### uid/gid reference
+
+| id    | name       | package                    |
+|-------|------------|----------------------------|
+| 19999 | miniflux   | www-apps/miniflux          |
+| 19998 | maddy      | mail-mta/maddy             |
+| 19997 | mattermost | www-apps/mattermost-server |
