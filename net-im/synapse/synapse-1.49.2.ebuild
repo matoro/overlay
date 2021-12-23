@@ -23,10 +23,11 @@ inherit distutils-r1 systemd user
 
 REQUIRED_USE="|| ( postgres sqlite )"
 
-# https://github.com/matrix-org/synapse/pull/11527
-# "Revert "Move `glob_to_regex` and `re_word_boundary` to `matrix-python-common`""
+# https://github.com/matrix-org/synapse/pull/11625
+# "Pin to frozendict<2.1.2"
 RDEPEND=">=dev-python/jsonschema-3.0.0[${PYTHON_USEDEP}]
 		>=dev-python/frozendict-1[${PYTHON_USEDEP}]
+		<dev-python/frozendict-2.1.2[${PYTHON_USEDEP}]
 		>=dev-python/unpaddedbase64-1.1.0[${PYTHON_USEDEP}]
 		>=dev-python/canonicaljson-1.4.0[${PYTHON_USEDEP}]
 		>=dev-python/signedjson-1.1.0[${PYTHON_USEDEP}]
