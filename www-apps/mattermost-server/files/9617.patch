@@ -1,0 +1,136 @@
+From 89e1aa5f315c590f43d3ede9aa9f2dae5ff681f6 Mon Sep 17 00:00:00 2001
+From: Harrison Healey <harrisonmhealey@gmail.com>
+Date: Wed, 5 Jan 2022 09:43:31 -0500
+Subject: [PATCH 1/2] Add workaround for mmjstool integrity check failing
+
+---
+ package-lock.json       |  2 +-
+ package.json            |  4 +++-
+ skip_integrity_check.js | 11 +++++++++++
+ 3 files changed, 15 insertions(+), 2 deletions(-)
+ create mode 100644 skip_integrity_check.js
+
+diff --git a/package-lock.json b/package-lock.json
+index 797d3f04689..187b0d35722 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -7,6 +7,7 @@
+     "": {
+       "name": "@mattermost/webapp",
+       "version": "5.36.0-0",
++      "hasInstallScript": true,
+       "dependencies": {
+         "@formatjs/intl-pluralrules": "4.0.6",
+         "@formatjs/intl-relativetimeformat": "6.2.3",
+@@ -63199,7 +63200,6 @@
+     },
+     "mmjstool": {
+       "version": "git+ssh://git@github.com/mattermost/mattermost-utilities.git#17ee7abdc0ccaec5d432123fcabc7fe73abe33ac",
+-      "integrity": "sha512-wHUORQrEsVFMgSBJvkXnRPJ1/PpcyNP9B+SHzN35/Y0tGvRqGAN+ZwIPBewIq91b5iEZWxRZX1ufrDnI0rAOwg==",
+       "dev": true,
+       "from": "mmjstool@github:mattermost/mattermost-utilities#17ee7abdc0ccaec5d432123fcabc7fe73abe33ac",
+       "requires": {
+diff --git a/package.json b/package.json
+index f5013ba1bee..6348ccd1cc2 100644
+--- a/package.json
++++ b/package.json
+@@ -295,7 +295,9 @@
+     "storybook": "start-storybook -p 6006 -s ./storybook/static",
+     "build-storybook": "build-storybook -s ./storybook/static",
+     "check-types": "tsc",
+-    "make-emojis": "node --experimental-json-modules build/emoji/emoji_gen.mjs"
++    "make-emojis": "node --experimental-json-modules build/emoji/emoji_gen.mjs",
++    "preinstall": "node skip_integrity_check.js",
++    "postinstall": "node skip_integrity_check.js"
+   },
+   "workspaces": []
+ }
+diff --git a/skip_integrity_check.js b/skip_integrity_check.js
+new file mode 100644
+index 00000000000..d811c986d4d
+--- /dev/null
++++ b/skip_integrity_check.js
+@@ -0,0 +1,11 @@
++// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
++// See LICENSE.txt for license information.
++
++const fs = require('fs');
++const content = JSON.parse(fs.readFileSync('package-lock.json', 'utf-8'));
++
++// Skip integrity check for mmjstool, which differs on Apple Silicon M1.
++// @see https://github.com/npm/cli/issues/2846
++delete content.dependencies.mmjstool.integrity;
++
++fs.writeFileSync('package-lock.json', JSON.stringify(content, null, 2) + '\n');
+
+From 7a0bf4391de8a1b4b9afc85e2def08178669fa7d Mon Sep 17 00:00:00 2001
+From: Harrison Healey <harrisonmhealey@gmail.com>
+Date: Thu, 6 Jan 2022 18:50:07 -0500
+Subject: [PATCH 2/2] Switch hooks to a step in the Makefile
+
+---
+ Makefile                | 2 ++
+ package-lock.json       | 2 --
+ package.json            | 4 +---
+ skip_integrity_check.js | 1 +
+ 4 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 7399c042982..953043ff837 100644
+--- a/Makefile
++++ b/Makefile
+@@ -40,6 +40,8 @@ i18n-extract: ## Extract strings for translation from the source code
+ node_modules: package.json package-lock.json
+ 	@echo Getting dependencies using npm
+ 
++	node skip_integrity_check.js
++
+ 	npm install
+ 	touch $@
+ 
+diff --git a/package-lock.json b/package-lock.json
+index 187b0d35722..52b72689ded 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -7,7 +7,6 @@
+     "": {
+       "name": "@mattermost/webapp",
+       "version": "5.36.0-0",
+-      "hasInstallScript": true,
+       "dependencies": {
+         "@formatjs/intl-pluralrules": "4.0.6",
+         "@formatjs/intl-relativetimeformat": "6.2.3",
+@@ -28971,7 +28970,6 @@
+     "node_modules/mmjstool": {
+       "version": "1.0.0",
+       "resolved": "git+ssh://git@github.com/mattermost/mattermost-utilities.git#17ee7abdc0ccaec5d432123fcabc7fe73abe33ac",
+-      "integrity": "sha512-wHUORQrEsVFMgSBJvkXnRPJ1/PpcyNP9B+SHzN35/Y0tGvRqGAN+ZwIPBewIq91b5iEZWxRZX1ufrDnI0rAOwg==",
+       "dev": true,
+       "dependencies": {
+         "@typescript-eslint/typescript-estree": "5.7.0",
+diff --git a/package.json b/package.json
+index 6348ccd1cc2..f5013ba1bee 100644
+--- a/package.json
++++ b/package.json
+@@ -295,9 +295,7 @@
+     "storybook": "start-storybook -p 6006 -s ./storybook/static",
+     "build-storybook": "build-storybook -s ./storybook/static",
+     "check-types": "tsc",
+-    "make-emojis": "node --experimental-json-modules build/emoji/emoji_gen.mjs",
+-    "preinstall": "node skip_integrity_check.js",
+-    "postinstall": "node skip_integrity_check.js"
++    "make-emojis": "node --experimental-json-modules build/emoji/emoji_gen.mjs"
+   },
+   "workspaces": []
+ }
+diff --git a/skip_integrity_check.js b/skip_integrity_check.js
+index d811c986d4d..7cb78cc79d0 100644
+--- a/skip_integrity_check.js
++++ b/skip_integrity_check.js
+@@ -7,5 +7,6 @@ const content = JSON.parse(fs.readFileSync('package-lock.json', 'utf-8'));
+ // Skip integrity check for mmjstool, which differs on Apple Silicon M1.
+ // @see https://github.com/npm/cli/issues/2846
+ delete content.dependencies.mmjstool.integrity;
++delete content.packages['node_modules/mmjstool'].integrity;
+ 
+ fs.writeFileSync('package-lock.json', JSON.stringify(content, null, 2) + '\n');
