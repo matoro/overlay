@@ -1,7 +1,7 @@
 # Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 DESCRIPTION="Matrix reference homeserver"
 HOMEPAGE="https://github.com/matrix-org/synapse https://matrix.org"
@@ -19,13 +19,15 @@ RESTRICT="mirror postgres? ( test )"
 PYTHON_COMPAT=( python3_{7,8,9,10} pypy3 )
 PYTHON_REQ_USE="sqlite(+)?"
 
-inherit distutils-r1 systemd user
+inherit distutils-r1 systemd
 
 REQUIRED_USE="|| ( postgres sqlite )"
 
 # https://github.com/matrix-org/synapse/pull/12166
 # "Relax version guard for packaging"
-RDEPEND=">=dev-python/jsonschema-3.0.0[${PYTHON_USEDEP}]
+RDEPEND="acct-user/synapse
+		acct-group/synapse
+		>=dev-python/jsonschema-3.0.0[${PYTHON_USEDEP}]
 		>=dev-python/frozendict-1[${PYTHON_USEDEP}]
 		!~dev-python/frozendict-2.1.2[${PYTHON_USEDEP}]
 		>=dev-python/unpaddedbase64-1.1.0[${PYTHON_USEDEP}]
@@ -82,11 +84,6 @@ RDEPEND=">=dev-python/jsonschema-3.0.0[${PYTHON_USEDEP}]
 DEPEND="${RDEPEND}
 		test? ( >=dev-python/parameterized-0.7.0[${PYTHON_USEDEP}] )"
 
-pkg_setup() {
-	enewgroup synapse
-	enewuser synapse -1 -1 "/var/lib/synapse" "synapse"
-}
-
 python_test() {
 	use postgres && SYNAPSE_POSTGRES=True
 	"${EPYTHON}" -m twisted.trial -ex tests || die "tests failed under ${EPYTHON}"
@@ -96,20 +93,16 @@ python_install() {
 	distutils-r1_python_install --skip-build
 	dodir \
 		/etc/${PN} \
-		/var/lib/${PN} \
 		/var/log/${PN}
 	keepdir \
 		/etc/${PN} \
-		/var/lib/${PN} \
 		/var/log/${PN}
 	systemd_dounit "contrib/systemd/matrix-${PN}.service"
 	insinto /etc/${PN}
 	doins "contrib/systemd/log_config.yaml"
 	fowners ${PN}:${PN} \
 		/etc/${PN} \
-		/var/lib/${PN} \
 		/var/log/${PN}
-	fperms 0700 "/var/lib/${PN}"
 	fperms 0750 "/var/log/${PN}"
 	newinitd "${FILESDIR}/${PN}.init.d" "${PN}"
 	newconfd "${FILESDIR}/${PN}.confd" "${PN}"

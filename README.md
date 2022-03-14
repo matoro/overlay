@@ -19,3 +19,4 @@ You may be interested in:
 | 19999 | miniflux   | www-apps/miniflux          |
 | 19998 | maddy      | mail-mta/maddy             |
 | 19997 | mattermost | www-apps/mattermost-server |
+| 19996 | synapse    | net-im/synapse             |
