@@ -4,7 +4,7 @@
 EAPI=7
 
 # Change this when you update the ebuild
-GIT_COMMIT="7869cff72dda8eadbf0fc707d214fda071a2ed7e"
+GIT_COMMIT="2da130ccd402acff7cf40750dcc0a631c45e2029"
 WEBAPP_COMMIT="aa56b8d9a2c89ad45dab8306617238c22bb917dc"
 EGO_PN="github.com/mattermost/${PN}"
 WEBAPP_P="mattermost-webapp-${PV}"
@@ -119,6 +119,8 @@ src_prepare() {
 src_compile() {
 	export GOPATH="${G}"
 	export GOBIN="${S}"
+	# https://github.com/golang/go/issues/43505
+	filter-flags -flto*
 	export CGO_CFLAGS="${CFLAGS}"
 	export CGO_LDFLAGS="${LDFLAGS}"
 	(use static && ! use pie) && export CGO_ENABLED=0

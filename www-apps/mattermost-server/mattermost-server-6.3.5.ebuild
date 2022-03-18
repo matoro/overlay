@@ -4,8 +4,8 @@
 EAPI=8
 
 # Change this when you update the ebuild
-GIT_COMMIT="2137f62fb64db7dee333e7d55aab262ba54031b3"
-WEBAPP_COMMIT="2bd0eb01e484768d1045e224f93dee9a108b4fa9"
+GIT_COMMIT="7f1f360e41d8f2ef85c5221fbff252c15bc0c135"
+WEBAPP_COMMIT="e4719517194fca15fa0e43d09a75806b25aeee6b"
 EGO_PN="github.com/mattermost/${PN}"
 WEBAPP_P="mattermost-webapp-${PV}"
 MY_PV="${PV/_/-}"
@@ -109,12 +109,17 @@ src_prepare() {
 		-E "s/^(\s*)COMMIT_HASH:(.*),$/\1COMMIT_HASH: JSON.stringify\(\"${WEBAPP_COMMIT}\)\"\),/" \
 		client/webpack.config.js || die
 
+	# https://github.com/mattermost/mattermost-webapp/pull/9617
+	( cd "client" && eapply "${FILESDIR}/9617.patch" )
+
 	default
 }
 
 src_compile() {
 	export GOPATH="${G}"
 	export GOBIN="${S}"
+	# https://github.com/golang/go/issues/43505
+	filter-flags -flto*
 	export CGO_CFLAGS="${CFLAGS}"
 	export CGO_LDFLAGS="${LDFLAGS}"
 	(use static && ! use pie) && export CGO_ENABLED=0
