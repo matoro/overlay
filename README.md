@@ -5,6 +5,7 @@ My personal Gentoo overlay.  Contains some interesting apps/services and manual 
 You may be interested in:
 
 * app-editors/tilde: "An intuitive text editor for the terminal"
+* dev-db/opensearch: "Open source distributed and RESTful search engine" (binary distribution; NOT compiled from source)
 * mail-mta/maddy: "Composable all-in-one mail server"
 * net-analyzer/moloch: "Open source, large scale, full packet capturing, indexing, and database system" (requires pentoo overlay)
 * net-im/synapse: "Matrix reference homeserver"
@@ -20,3 +21,4 @@ You may be interested in:
 | 19998 | maddy      | mail-mta/maddy             |
 | 19997 | mattermost | www-apps/mattermost-server |
 | 19996 | synapse    | net-im/synapse             |
+| 19995 | opensearch | dev-db/opensearch          |

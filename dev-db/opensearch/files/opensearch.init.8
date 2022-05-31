@@ -1,0 +1,70 @@
+#!/sbin/openrc-run
+
+name="Opensearch"
+description="Opensearch Server"
+
+OPENSEARCH_INSTANCE=${RC_SVCNAME#*.}
+
+if [ -n "${OPENSEARCH_INSTANCE}" ] && [ ${RC_SVCNAME} != "opensearch" ]; then
+	OPENSEARCH_BASE_PATH="/var/lib/opensearch/${OPENSEARCH_INSTANCE}"
+	CONF_DIR="/etc/opensearch/${OPENSEARCH_INSTANCE}"
+	DEFAULT_LOG_DIR="/var/log/opensearch/${OPENSEARCH_INSTANCE}"
+else
+	OPENSEARCH_BASE_PATH="/var/lib/opensearch/_default"
+	CONF_DIR="/etc/opensearch"
+	DEFAULT_LOG_DIR="/var/log/opensearch/_default"
+fi
+
+OPENSEARCH_HOME=${OPENSEARCH_HOME:="/usr/share/opensearch"}
+OPENSEARCH_USER=${OPENSEARCH_USER:="opensearch"}
+OPENSEARCH_GROUP=${OPENSEARCH_GROUP:="opensearch"}
+OPENSEARCH_STARTUP_SLEEP_TIME=${OPENSEARCH_STARTUP_TIME:=5}
+OPENSEARCH_JAVA_HOME=${OPENSEARCH_JAVA_HOME:=$(java-config -g JAVA_HOME)}
+MAX_OPEN_FILES=${MAX_OPEN_FILES:=65536}
+MAX_MAP_COUNT=${MAX_MAP_COUNT:=262144}
+
+DATA_DIR=${DATA_DIR:="${OPENSEARCH_BASE_PATH}/data"}
+LOG_DIR=${LOG_DIR:="${DEFAULT_LOG_DIR}"}
+
+if [ -f "${CONF_DIR}/opensearch.in.sh" ]; then
+    OPENSEARCH_INCLUDE="${CONF_DIR}/opensearch.in.sh"
+fi
+
+export OPENSEARCH_INCLUDE
+export OPENSEARCH_JAVA_HOME
+export OPENSEARCH_JAVA_OPTS
+export OPENSEARCH_JVM_OPTIONS
+export OPENSEARCH_STARTUP_SLEEP_TIME
+export OPENSEARCH_PATH_CONF="${CONF_DIR}"
+
+pidfile="/run/opensearch/${RC_SVCNAME}.pid"
+
+command="/usr/share/opensearch/bin/opensearch"
+command_args="-Epath.logs=${LOG_DIR} -Epath.data=${DATA_DIR}"
+command_args_background="--daemonize --pidfile=${pidfile}"
+command_user="${OPENSEARCH_USER}:${OPENSEARCH_GROUP}"
+required_files="${CONF_DIR}/opensearch.yml"
+retry="TERM/30/KILL/30"
+
+depend() {
+	use net
+}
+
+start_pre() {
+	if [ -n "${MAX_MAP_COUNT}" -a -f /proc/sys/vm/max_map_count ]; then
+		sysctl -q -w vm.max_map_count=${MAX_MAP_COUNT}
+	fi
+
+	checkpath -d -o "${OPENSEARCH_USER}:${OPENSEARCH_GROUP}" -m750 "/var/lib/opensearch"
+	checkpath -d -o "${OPENSEARCH_USER}:${OPENSEARCH_GROUP}" -m750 "/var/log/opensearch"
+	checkpath -d -o "${OPENSEARCH_USER}:${OPENSEARCH_GROUP}" -m750 "/run/opensearch"
+	checkpath -d -o "${OPENSEARCH_USER}:${OPENSEARCH_GROUP}" -m750 "${OPENSEARCH_BASE_PATH}"
+	checkpath -d -o "${OPENSEARCH_USER}:${OPENSEARCH_GROUP}" -m750 "${LOG_DIR}"
+
+	# fails to start without keystore
+	if [ ! -f "${CONF_DIR}/opensearch.keystore" ]; then
+		"${OPENSEARCH_HOME}/bin/opensearch-keystore" create
+	else
+		"${OPENSEARCH_HOME}/bin/opensearch-keystore" upgrade
+	fi
+}

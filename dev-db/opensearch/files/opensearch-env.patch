@@ -1,0 +1,23 @@
+diff --git a/opensearch-env b/opensearch-env
+index 42dea45..97a14e1 100755
+--- a/bin/opensearch-env
++++ b/bin/opensearch-env
+@@ -44,6 +44,18 @@ OPENSEARCH_HOME=`dirname "$OPENSEARCH_HOME"`
+ # now set the classpath
+ OPENSEARCH_CLASSPATH="$OPENSEARCH_HOME/lib/*"
+ 
++# Set our JVM in a Gentoo-specific manner
++if [ -z "$OPENSEARCH_JAVA_HOME" ]; then
++  GENTOO_VM=$(depend-java-query --get-vm virtual/jre:17)
++  if [ ! -z "$GENTOO_VM" ]; then
++    OPENSEARCH_JAVA_HOME=$(java-config-2 --select-vm=${GENTOO_VM} --jre-home)
++  else
++    echo "Unable to automatically detect a supported Java 17 VM. Opensearch is unlikely to launch."
++    echo "Please ensure that you have installed an appropriate Java VM using portage"
++    echo "OR pass the OPENSEARCH_JAVA_HOME environment variable."
++  fi
++fi
++
+ # now set the path to java: OPENSEARCH_JAVA_HOME -> JAVA_HOME -> bundled JDK
+ if [ ! -z "$OPENSEARCH_JAVA_HOME" ]; then
+   JAVA="$OPENSEARCH_JAVA_HOME/bin/java"
