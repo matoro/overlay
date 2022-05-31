@@ -1,11 +1,11 @@
 # Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 # Change this when you update the ebuild
-GIT_COMMIT="2da130ccd402acff7cf40750dcc0a631c45e2029"
-WEBAPP_COMMIT="aa56b8d9a2c89ad45dab8306617238c22bb917dc"
+GIT_COMMIT="3161c1a186595cc371830c4e651002377d4e77cc"
+WEBAPP_COMMIT="660a89322430bd1337832ec7c95b5c533c72b9b1"
 EGO_PN="github.com/mattermost/${PN}"
 WEBAPP_P="mattermost-webapp-${PV}"
 MY_PV="${PV/_/-}"
@@ -15,13 +15,14 @@ if [[ "$ARCH" != "x86" && "$ARCH" != "amd64" ]]; then UNSUPPORTED_ARCH="1" ; fi
 [[ "${ARCH}" == "ppc64" ]] && INHERIT="${INHERIT} flag-o-matic"
 [[ -z "${UNSUPPORTED_ARCH}" ]] || DEPEND="media-libs/libpng:0"
 
-inherit ${INHERIT} golang-vcs-snapshot systemd user flag-o-matic
+inherit ${INHERIT} go-module systemd flag-o-matic
 
 DESCRIPTION="Open source Slack-alternative in Golang and React (Team Edition)"
 HOMEPAGE="https://mattermost.com"
 SRC_URI="
 	https://${EGO_PN}/archive/v${MY_PV}.tar.gz -> ${P}.tar.gz
 	https://${EGO_PN/server/webapp}/archive/v${MY_PV}.tar.gz -> ${WEBAPP_P}.tar.gz
+	${EGO_SUM_SRC_URI}
 "
 RESTRICT="mirror test"
 
@@ -30,15 +31,15 @@ SLOT="0"
 KEYWORDS="~amd64 ~arm ~arm64 ~x86 ~ppc64" # Untested: arm64 x86
 IUSE="+npm-audit debug pie static"
 
-DEPEND="${DEPEND}
+RDEPEND="!www-apps/mattermost-server-ee
+	acct-group/mattermost
+	acct-user/mattermost"
+
+DEPEND="${RDEPEND}
 	>net-libs/nodejs-6[npm]
 "
-RDEPEND="!www-apps/mattermost-server-ee"
 
 QA_PRESTRIPPED="usr/libexec/.*"
-
-G="${WORKDIR}/${P}"
-S="${G}/src/${EGO_PN}"
 
 pkg_pretend() {
 	if [[ "${MERGE_TYPE}" != binary ]]; then
@@ -59,16 +60,9 @@ pkg_pretend() {
 	fi
 }
 
-pkg_setup() {
-	enewgroup mattermost
-	enewuser mattermost -1 -1 -1 mattermost
-}
-
 src_unpack() {
-	golang-vcs-snapshot_src_unpack
-	cd "${S}" || die
-	unpack "${WEBAPP_P}.tar.gz"
-	mv "${WEBAPP_P/_/-}" client || die
+	go-module_src_unpack
+	mv "${S}/../${WEBAPP_P/_/-}" "${S}/client" || die
 }
 
 src_prepare() {
@@ -82,6 +76,8 @@ src_prepare() {
 	# is to ensure the initial configuration file has all the correct defaults
 	# provided in the server code.  Existing config.json files are not affected
 	# by this change."
+	sed -i 's/$(GOFLAGS) run/run $(GOFLAGS)/g' "Makefile" || die
+	go mod vendor || die
 	emake config-reset
 	mv config/config.json config/default.json || die
 

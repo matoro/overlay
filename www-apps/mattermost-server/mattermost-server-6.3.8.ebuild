@@ -4,8 +4,8 @@
 EAPI=8
 
 # Change this when you update the ebuild
-GIT_COMMIT="7fff157bcf85b54d595e22262a66d7f28d4b5a68"
-WEBAPP_COMMIT="0494527e29ffc13f8dcd064f7f6bedc26a889f48"
+GIT_COMMIT="a030ae538b9cd373b4e0aa808fc426b82ed24937"
+WEBAPP_COMMIT="154fcb97d348c86367661fb3f17d78681f0407e5"
 EGO_PN="github.com/mattermost/${PN}"
 WEBAPP_P="mattermost-webapp-${PV}"
 MY_PV="${PV/_/-}"
@@ -108,6 +108,9 @@ src_prepare() {
 	sed -i \
 		-E "s/^(\s*)COMMIT_HASH:(.*),$/\1COMMIT_HASH: JSON.stringify\(\"${WEBAPP_COMMIT}\)\"\),/" \
 		client/webpack.config.js || die
+
+	# https://github.com/mattermost/mattermost-webapp/pull/9617
+	( cd "client" && eapply "${FILESDIR}/9617.patch" )
 
 	default
 }
