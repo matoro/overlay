@@ -1,1 +1,0 @@
-MINIFLUX_OPTS="-config-file ${EROOT}/etc/miniflux.conf"
