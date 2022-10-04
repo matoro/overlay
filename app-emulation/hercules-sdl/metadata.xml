@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>matoro@users.noreply.github.com</email>
+		<name>matoro</name>
+	</maintainer>
+	<longdescription>
+		This version of Hercules 4.x Hyperion is a SoftDevLabs maintained version of the Hercules emulator containing fixes made by David B. Trout and others for bugs that may still exist in the original hercules-390 version of Hercules 4.0 Hyperion, as well as enhancements and improvements to the overall functionality above and beyond what is provided by the hercules-390 version of Hercules.
+	</longdescription>
+</pkgmetadata>
