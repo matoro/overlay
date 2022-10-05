@@ -4,8 +4,8 @@
 EAPI=8
 
 # Change this when you update the ebuild
-GIT_COMMIT="d565c9595e08fe87d520f4ab2fa55e8f5a065f9c"
-WEBAPP_COMMIT="cf2606b483a1ed484fcb64175392cace95014cc5"
+GIT_COMMIT="97957fee70257dbc8d7eaadaab6999116d7b9aed"
+WEBAPP_COMMIT="97625bacd44535cefb465e2117e72b4e5b055e7d"
 EGO_PN="github.com/mattermost/${PN}"
 WEBAPP_P="mattermost-webapp-${PV}"
 MY_PV="${PV/_/-}"
@@ -27,7 +27,7 @@ SRC_URI="
 RESTRICT="mirror test"
 
 LICENSE="AGPL-3"
-SLOT="0"
+SLOT="0/7.0"
 KEYWORDS="~amd64 ~arm ~arm64 ~x86 ~ppc64" # Untested: arm64 x86
 IUSE="+npm-audit debug pie static"
 
