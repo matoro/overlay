@@ -7,14 +7,14 @@ inherit autotools flag-o-matic fcaps
 
 DESCRIPTION="The SoftDevLabs (SDL) version of the Hercules 4.x Hyperion Emulator"
 HOMEPAGE="https://sdl-hercules-390.github.io/html/"
-SRC_URI="https://github.com/SDL-Hercules-390/hyperion/archive/refs/tags/Release_${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/SDL-Hercules-390/hyperion/archive/refs/tags/Release_${PV/.0/}.tar.gz -> ${P/.0/}.tar.gz"
 
 LICENSE="QPL-1.0"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc64 ~x86"
 IUSE="bzip2 custom-cflags test"
 RESTRICT="mirror !test? ( test )"
-S="${WORKDIR}/hyperion-Release_${PV}"
+S="${WORKDIR}/hyperion-Release_${PV/.0/}"
 FILECAPS=(
 	cap_sys_nice\=eip usr/bin/hercules --
 	cap_sys_nice\=eip usr/bin/herclin --
@@ -43,11 +43,6 @@ src_prepare() {
 
 	default
 	eautoreconf
-
-	# The local modules need local libs, so when doing a parallel install
-	# of the modules and libs breaks during relinking.  Force the libs to
-	# install first, and then the modules that use those libs.  #488126
-	echo "install-modexecLTLIBRARIES: install-libLTLIBRARIES" >> Makefile.in || die
 }
 
 src_configure() {
@@ -71,5 +66,5 @@ src_install() {
 	doins hercules.cnf
 
 	# No static archives.  Have to leave .la files for modules. #720342
-	rm "${ED}/usr/$(get_libdir)/"*.la || die
+	find "${ED}/usr/$(get_libdir)" -name "*.la" -delete || die
 }
