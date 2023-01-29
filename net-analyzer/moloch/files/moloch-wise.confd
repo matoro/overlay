@@ -1,3 +1,0 @@
-MOLOCH_WISE_STDOUT="${MOLOCH_WISE_STDOUT:-${EROOT}/var/log/moloch/moloch-wise.stdout.log}"
-MOLOCH_WISE_STDERR="${MOLOCH_WISE_STDERR:-${EROOT}/var/log/moloch/moloch-wise.stderr.log}"
-MOLOCH_WISE_OPTIONS="-c ${EROOT}/etc/moloch/wise.ini ${MOLOCH_WISE_OPTIONS:-}"

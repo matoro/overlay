@@ -1,3 +1,0 @@
-MOLOCH_VIEWER_STDOUT="${MOLOCH_VIEWER_STDOUT:-${EROOT}/var/log/moloch/moloch-viewer.stdout.log}"
-MOLOCH_VIEWER_STDERR="${MOLOCH_VIEWER_STDERR:-${EROOT}/var/log/moloch/moloch-viewer.stderr.log}"
-MOLOCH_VIEWER_OPTIONS="-c ${EROOT}/etc/moloch/config.ini ${MOLOCH_VIEWER_OPTIONS:-}"

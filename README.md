@@ -8,7 +8,7 @@ You may be interested in:
 * app-emulation/hercules-sdl: "The SoftDevLabs (SDL) version of the Hercules 4.x Hyperion System/370, ESA/390, and z/Architecture Emulator"
 * dev-db/opensearch: "Open source distributed and RESTful search engine" (binary distribution; NOT compiled from source)
 * mail-mta/maddy: "Composable all-in-one mail server"
-* net-analyzer/moloch: "Open source, large scale, full packet capturing, indexing, and database system" (requires pentoo overlay)
+* net-analyzer/arkime: "Open source, large scale, full packet capturing, indexing, and database system" (requires pentoo overlay)
 * net-im/synapse: "Matrix reference homeserver"
 * net-misc/restool: "A user space application providing the ability to dynamically create and manage DPAA2 containers and objects from Linux"
 * www-apps/mattermost-server: "Open source Slack-alternative on Golang and React (Team Edition)"

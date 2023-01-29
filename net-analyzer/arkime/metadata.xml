@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>matoro@airmail.cc</email>
+		<name>matoro</name>
+	</maintainer>
+	<longdescription lang="en">
+	Moloch augments your current security infrastructure to store and index
+	network traffic in standard PCAP format, providing fast, indexed access.
+	</longdescription>
+	<use>
+		<flag name="capture">Moloch capture daemon, including parsers</flag>
+		<flag name="parliament">Web app to monitor multiple Moloch clusters</flag><!--https://github.com/aol/moloch/blob/master/parliament/README.md-->
+		<flag name="viewer">Node application handling web UI and PCAP transfer</flag>
+		<flag name="wise">With Intelligence See Everything - threat feed integration</flag><!--https://github.com/aol/moloch/wiki/WISE-->
+	</use>
+</pkgmetadata>

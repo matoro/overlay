@@ -1,3 +1,0 @@
-MOLOCH_CAPTURE_STDOUT="${MOLOCH_CAPTURE_STDOUT:-${EROOT}/var/log/moloch/moloch-capture.stdout.log}"
-MOLOCH_CAPTURE_STDERR="${MOLOCH_CAPTURE_STDERR:-${EROOT}/var/log/moloch/moloch-capture.stderr.log}"
-MOLOCH_CAPTURE_OPTIONS="-c /etc/moloch/config.ini ${MOLOCH_CAPTURE_OPTIONS:-}"

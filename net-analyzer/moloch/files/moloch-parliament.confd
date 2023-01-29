@@ -1,3 +1,0 @@
-MOLOCH_PARLIAMENT_STDOUT="${MOLOCH_PARLIAMENT_STDOUT:-${EROOT}/var/log/moloch/moloch-parliament.stdout.log}"
-MOLOCH_PARLIAMENT_STDERR="${MOLOCH_PARLIAMENT_STDERR:-${EROOT}/var/log/moloch/moloch-parliament.stderr.log}"
-MOLOCH_PARLIAMENT_OPTIONS="-c ${EROOT}/etc/moloch/parliament.json ${MOLOCH_PARLIAMENT_OPTIONS:-}"
