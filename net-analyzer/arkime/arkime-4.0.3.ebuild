@@ -15,7 +15,7 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~x86"
 IUSE="+capture +viewer +parliament +wise +cont3xt pfring daq test netlink lua"
-REQUIRED_USE="capture? ( ${LUA_REQUIRED_USE} ) pfring? ( capture ) daq? ( capture ) netlink? ( capture ) lua? ( capture )"
+REQUIRED_USE="lua? ( ${LUA_REQUIRED_USE} ) pfring? ( capture ) daq? ( capture ) netlink? ( capture ) lua? ( capture )"
 RESTRICT="mirror viewer? ( network-sandbox ) parliament? ( network-sandbox ) wise? ( network-sandbox ) cont3xt? ( network-sandbox )"
 QA_PREBUILT="usr/lib/${PN}/node_modules/* usr/lib/${PN}/*/node_modules/*"
 
@@ -75,7 +75,9 @@ src_prepare() {
 			GeoLite2-Country.mmdb \
 			GeoLite2-ASN.mmdb
 		do
-			use test && ln -sv "${FILESDIR}/${datafile}" "tests/${datafile}" || die
+			if use test; then
+				ln -sv "${FILESDIR}/${datafile}" "tests/${datafile}" || die
+			fi
 		done
 
 		local deps=( yara libmaxminddb gio-2.0 gobject-2.0 gthread-2.0 glib-2.0 gmodule-2.0 libcurl libmagic libnghttp2 )
