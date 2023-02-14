@@ -23,6 +23,7 @@ directory="${EPREFIX}/usr/lib/arkime"
 depend() {
     local interface="$(grep -Pzo "\[$(nodename)\](.*\n)*" /etc/arkime/config.ini | grep -Paio "(?<=^interface=).+" | head -n 1)"
     need "net.${interface}"
+    use dns netmount
 }
 
 start_pre() {
