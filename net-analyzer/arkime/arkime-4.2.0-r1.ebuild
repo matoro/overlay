@@ -38,7 +38,7 @@ DEPEND="
 RDEPEND="${DEPEND}
 	capture? (
 		>=dev-libs/glib-2.72.4:2
-		>=app-forensics/yara-4.0.2
+		>=app-forensics/yara-4.0.2:=
 		>=dev-libs/libmaxminddb-1.4.3
 		!pfring? ( >=net-libs/libpcap-1.10.1 )
 		>=net-misc/curl-7.78.0
