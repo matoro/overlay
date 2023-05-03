@@ -49,6 +49,7 @@ src_install() {
 	doins -r .
 
 	keepdir /usr/share/${PN}/plugins
+	keepdir /usr/share/${PN}/extensions
 
 	exeinto /usr/share/${PN}/bin
 	doexe ${FILESDIR}/${PN}-systemd-pre-exec
