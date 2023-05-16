@@ -12,8 +12,8 @@ SRC_URI="https://github.com/SDL-Hercules-390/hyperion/archive/refs/tags/Release_
 LICENSE="QPL-1.0"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc64 ~x86"
-IUSE="bzip2 custom-cflags test"
-RESTRICT="mirror !test? ( test )"
+IUSE="bzip2 custom-cflags"
+RESTRICT="mirror"
 S="${WORKDIR}/hyperion-Release_${PV/.0/}"
 FILECAPS=(
 	cap_sys_nice\=eip usr/bin/hercules --
@@ -31,8 +31,6 @@ DEPEND="${RDEPEND}
 	app-emulation/hercules-sdl-decnumber
 	app-emulation/hercules-sdl-softfloat
 	app-emulation/hercules-sdl-telnet"
-BDEPEND="${RDEPEND}
-	test? ( dev-lang/regina-rexx )"
 
 PATCHES=( "${FILESDIR}"/${PN}-4.4.1-htmldir.patch )
 
