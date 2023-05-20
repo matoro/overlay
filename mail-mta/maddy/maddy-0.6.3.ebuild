@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit go-module fcaps systemd
+inherit go-module fcaps
 
 DESCRIPTION="Composable all-in-one mail server"
 HOMEPAGE="https://maddy.email"
@@ -1047,11 +1047,9 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~arm64 ~ppc64 ~x86"
 RESTRICT="mirror"
-IUSE="+doc"
 RDEPEND="acct-group/${PN}
 	acct-user/${PN}"
-DEPEND="${RDEPEND}
-	doc? ( app-text/scdoc )"
+BDEPEND="app-text/scdoc"
 FILECAPS=( "cap_net_bind_service+ep" "usr/bin/${PN}" )
 PATCHES=( "${FILESDIR}/516.patch" )
 
@@ -1066,16 +1064,6 @@ src_compile() {
 }
 
 src_install() {
-	dobin "build/${PN}"
-	dodoc -r "docs" "README.md" "HACKING.md"
+	"./build.sh" --destdir "${ED}" --prefix "/usr" "install" || die
 	doman "build/man/"*
-	systemd_dounit "build/systemd/"*
-	newinitd "${FILESDIR}/${PN}.initd" "${PN}"
-	newconfd "${FILESDIR}/${PN}.confd" "${PN}"
-	dodir "/etc/${PN}"
-	insinto "/etc/${PN}"
-	newins "build/${PN}.conf" "${PN}.conf"
-	fowners -R "${PN}:${PN}" "/etc/${PN}"
-	fperms "0770" "/etc/${PN}"
-	fperms "0640" "/etc/${PN}/${PN}.conf"
 }
