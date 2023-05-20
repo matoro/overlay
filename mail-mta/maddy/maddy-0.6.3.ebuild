@@ -1055,6 +1055,11 @@ DEPEND="${RDEPEND}
 FILECAPS=( "cap_net_bind_service+ep" "usr/bin/${PN}" )
 PATCHES=( "${FILESDIR}/516.patch" )
 
+src_prepare() {
+	sed -i "s#/usr/local/bin#/usr/bin#g" "dist/systemd/"*.service || die
+	default
+}
+
 src_compile() {
 	default
 	"./build.sh" "build" || die
