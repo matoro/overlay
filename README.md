@@ -1,17 +1,15 @@
 ## matoro's gentoo overlay
 
-My personal Gentoo overlay.  Contains some interesting apps/services and manual bumps of in-tree ebuilds not yet supporting the latest Python.
+My personal Gentoo overlay.  Contains some interesting apps/services and manual bumps of in-tree ebuilds.
 
 You may be interested in:
 
 * app-editors/tilde: "An intuitive text editor for the terminal"
-* app-emulation/hercules-sdl: "The SoftDevLabs (SDL) version of the Hercules 4.x Hyperion System/370, ESA/390, and z/Architecture Emulator"
+* app-emulation/hercules-sdl: "The SoftDevLabs (SDL) version of the Hercules 4.x Hyperion System/370, ESA/390, and z/Architecture Emulator" (proposed for `::gentoo` in https://github.com/gentoo/gentoo/pull/31051)
 * dev-db/opensearch: "Open source distributed and RESTful search engine" (binary distribution; NOT compiled from source)
 * mail-mta/maddy: "Composable all-in-one mail server"
 * net-analyzer/arkime: "Open source, large scale, full packet capturing, indexing, and database system" (requires pentoo overlay)
-* net-im/synapse: "Matrix reference homeserver"
 * net-misc/restool: "A user space application providing the ability to dynamically create and manage DPAA2 containers and objects from Linux"
-* www-apps/mattermost-server: "Open source Slack-alternative on Golang and React (Team Edition)"
 
 
 #### uid/gid reference
