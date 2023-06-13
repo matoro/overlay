@@ -9,7 +9,7 @@ inherit autotools systemd lua-single toolchain-funcs flag-o-matic pam
 DESCRIPTION="Open source, large scale, full packet capturing, indexing, and database system"
 HOMEPAGE="https://arkime.com https://github.com/arkime/arkime"
 SRC_URI="https://github.com/arkime/arkime/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz
-	viewer? ( https://github.com/gchq/CyberChef/releases/download/v9.55.0/CyberChef_v9.55.0.zip )"
+	viewer? ( https://github.com/gchq/CyberChef/releases/download/v10.4.0/CyberChef_v10.4.0.zip )"
 
 LICENSE="Apache-2.0"
 SLOT="0"
