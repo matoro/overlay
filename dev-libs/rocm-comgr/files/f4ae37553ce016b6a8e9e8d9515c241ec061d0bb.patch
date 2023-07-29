@@ -1,0 +1,23 @@
+From f4ae37553ce016b6a8e9e8d9515c241ec061d0bb Mon Sep 17 00:00:00 2001
+From: Ron Lieberman <ron.lieberman@amd.com>
+Date: Fri, 9 Dec 2022 15:36:27 -0600
+Subject: [PATCH] [merge] fix llvm::Optional->std::optional
+
+Change-Id: Ib3d21edad36112069f094df71a4547ce705d8b5e
+---
+ src/comgr-compiler.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/comgr-compiler.cpp b/src/comgr-compiler.cpp
+index bbcec66..2a7362a 100644
+--- a/src/comgr-compiler.cpp
++++ b/src/comgr-compiler.cpp
+@@ -842,7 +842,7 @@ amd_comgr_status_t AMDGPUCompiler::executeOutOfProcessHIPCompilation(
+   }
+ 
+   ArgsV.push_back("--genco");
+-  std::vector<Optional<StringRef>> Redirects;
++  llvm::ArrayRef<std::optional<StringRef>> Redirects;
+   std::string ErrMsg;
+   int RC = sys::ExecuteAndWait(Exec, ArgsV,
+                                /*env=*/None, Redirects, /*secondsToWait=*/0,

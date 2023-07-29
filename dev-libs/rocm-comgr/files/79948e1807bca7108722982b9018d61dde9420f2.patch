@@ -1,0 +1,49 @@
+From 79948e1807bca7108722982b9018d61dde9420f2 Mon Sep 17 00:00:00 2001
+From: Jacob Lambert <jacob.lambert@amd.com>
+Date: Thu, 27 Apr 2023 15:16:50 -0700
+Subject: [PATCH] Update default code object device lib from v4 to v5
+
+When compiling and adding device libraries, Comgr first checks
+for an -mcode-object-version=X option. If no option is provided,
+Comgr previously assumed v4. With this update, we now assume v5.
+
+Change-Id: Iec1c916b59a1369edf04a87e952a99f09e3bc5f0
+---
+ docs/ReleaseNotes.md      | 2 ++
+ src/comgr-device-libs.cpp | 8 ++++----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/docs/ReleaseNotes.md b/docs/ReleaseNotes.md
+index d5ab634..aba3115 100644
+--- a/docs/ReleaseNotes.md
++++ b/docs/ReleaseNotes.md
+@@ -19,6 +19,8 @@ code bases.
+ legal comgr-objdump option. However registering this as an LLVM option by Comgr
+ prevents other LLVM tools or instances from registering a -h option in the same
+ process, which is an issue because -h is a common short form for -help.
++-  Updated default code object version used when linking code object specific
++device library from v4 to v5
+ 
+ New Features
+ ------------
+diff --git a/src/comgr-device-libs.cpp b/src/comgr-device-libs.cpp
+index 80786d1..42bf9c3 100644
+--- a/src/comgr-device-libs.cpp
++++ b/src/comgr-device-libs.cpp
+@@ -194,12 +194,12 @@ amd_comgr_status_t addDeviceLibraries(DataAction *ActionInfo,
+       return Status;
+     }
+   }
+-  // Assume v4 if no option is given
++  // Assume v5 if no option is given
+   else {
+     if (auto Status = addObject(ResultSet, AMD_COMGR_DATA_KIND_BC,
+-                                "oclc_abi_version_400_lib.bc",
+-                                oclc_abi_version_400_lib,
+-                                oclc_abi_version_400_lib_size)) {
++                                "oclc_abi_version_500_lib.bc",
++                                oclc_abi_version_500_lib,
++                                oclc_abi_version_500_lib_size)) {
+       return Status;
+     }
+   }

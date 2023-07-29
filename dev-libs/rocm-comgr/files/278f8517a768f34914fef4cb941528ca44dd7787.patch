@@ -1,0 +1,54 @@
+From 278f8517a768f34914fef4cb941528ca44dd7787 Mon Sep 17 00:00:00 2001
+From: Jacob Lambert <jacob.lambert@amd.com>
+Date: Wed, 1 Mar 2023 11:56:27 -0800
+Subject: [PATCH] Fix warnings
+
+  - switched deprecated makeArrayRef to ArrayRef
+  - switched deprecated countTrailingZeros to countr_zero
+
+Change-Id: Ic66ef2a4e4dd7a9b4e1e720adb45a4b8c3b190c3
+---
+ src/comgr-compiler.cpp | 2 +-
+ src/comgr-elfdump.cpp  | 2 +-
+ src/comgr-objdump.cpp  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/comgr-compiler.cpp b/src/comgr-compiler.cpp
+index 2a35281..ecf6f0b 100644
+--- a/src/comgr-compiler.cpp
++++ b/src/comgr-compiler.cpp
+@@ -615,7 +615,7 @@ static amd_comgr_status_t linkWithLLD(llvm::ArrayRef<const char *> Args,
+   LLDArgs.insert(LLDArgs.begin(), "lld");
+   LLDArgs.push_back("--threads=1");
+ 
+-  ArrayRef<const char *> ArgRefs = llvm::makeArrayRef(LLDArgs);
++  ArrayRef<const char *> ArgRefs = llvm::ArrayRef(LLDArgs);
+   bool LLDRet = lld::elf::link(ArgRefs, LogS, LogE, false, false);
+   lld::CommonLinkerContext::destroy();
+   if (!LLDRet) {
+diff --git a/src/comgr-elfdump.cpp b/src/comgr-elfdump.cpp
+index 32dbd98..248952a 100644
+--- a/src/comgr-elfdump.cpp
++++ b/src/comgr-elfdump.cpp
+@@ -102,7 +102,7 @@ void printProgramHeaders(const ELFFile<ELFT> &ELF, raw_ostream &OS) {
+     OS << "off    " << format(Fmt, (uint64_t)Phdr.p_offset) << "vaddr "
+        << format(Fmt, (uint64_t)Phdr.p_vaddr) << "paddr "
+        << format(Fmt, (uint64_t)Phdr.p_paddr)
+-       << format("align 2**%u\n", countTrailingZeros<uint64_t>(Phdr.p_align))
++       << format("align 2**%u\n", countr_zero<uint64_t>(Phdr.p_align))
+        << "         filesz " << format(Fmt, (uint64_t)Phdr.p_filesz) << "memsz "
+        << format(Fmt, (uint64_t)Phdr.p_memsz) << "flags "
+        << ((Phdr.p_flags & ELF::PF_R) ? "r" : "-")
+diff --git a/src/comgr-objdump.cpp b/src/comgr-objdump.cpp
+index ead69fe..c2d8423 100644
+--- a/src/comgr-objdump.cpp
++++ b/src/comgr-objdump.cpp
+@@ -671,7 +671,7 @@ class AMDGCNPrettyPrinter : public PrettyPrinter {
+     OS << left_justify(IS.str(), 60)
+        << format("// %012" PRIX64 ": ", Address.Address);
+     typedef support::ulittle32_t U32;
+-    for (auto D : makeArrayRef(reinterpret_cast<const U32 *>(Bytes.data()),
++    for (auto D : ArrayRef(reinterpret_cast<const U32 *>(Bytes.data()),
+                                Bytes.size() / sizeof(U32))) {
+       // D should be explicitly casted to uint32_t here as it is passed
+       // by format to snprintf as vararg.

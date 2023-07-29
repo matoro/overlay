@@ -1,0 +1,28 @@
+From 46c32824dbd59689d0a5f05a9bf02d684765dcbd Mon Sep 17 00:00:00 2001
+From: Jeremy Newton <Jeremy.Newton@amd.com>
+Date: Thu, 25 May 2023 22:42:19 -0400
+Subject: [PATCH] Revert "SWDEV-325538 - Enable code object v5 by default"
+
+This reverts commit 041c00465b7adcee78085dc42253d42d1bb1f250.
+---
+ compiler/lib/utils/OPTIONS.def | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/compiler/lib/utils/OPTIONS.def b/compiler/lib/utils/OPTIONS.def
+index a8a90636..9b71f52e 100644
+--- a/compiler/lib/utils/OPTIONS.def
++++ b/compiler/lib/utils/OPTIONS.def
+@@ -1272,8 +1272,8 @@ OPTION(OT_UINT32, \
+        OA_RUNTIME|OVA_OPTIONAL|OA_SEPARATOR_EQUAL, \
+        "code-object-version", NULL, \
+        LCCodeObjectVersion, \
+-       5, 4, 5, NULL, \
+-       "Specify code object ABI version. Allowed values are 4, and 5. Defaults to 5. (COMGR only)")
++       4, 4, 5, NULL, \
++       "Specify code object ABI version. Allowed values are 4, and 5. Defaults to 4. (COMGR only)")
+ 
+ /*
+    Do not remove the following line. Any option should be
+-- 
+2.40.1
+

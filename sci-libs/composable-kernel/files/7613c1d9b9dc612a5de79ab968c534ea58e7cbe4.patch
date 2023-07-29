@@ -1,0 +1,39 @@
+From 7613c1d9b9dc612a5de79ab968c534ea58e7cbe4 Mon Sep 17 00:00:00 2001
+From: Jun Liu <Liu.Jun@amd.com>
+Date: Wed, 26 Apr 2023 13:41:03 -0700
+Subject: [PATCH] [CK] suppress unsafe buffer warn (#687)
+
+incomplete fix from https://github.com/ROCmSoftwarePlatform/composable_kernel/pull/670
+
+So it does not only happen in gtest but also in CK code:
+
+We need to fix them as a quality improvement, but for now suppressing this warning in immediate releases:
+http://compiler-ci.amd.com/blue/rest/organizations/jenkins/pipelines/compiler-psdb-amd-stg-open/runs/2540/nodes/282/steps/3202/log/?start=0
+
+e.g.
+```
+[2023-04-26T17:26:31.524Z] /jenkins/workspace/compiler-psdb-amd-stg-open/Libs/MIOpen/deps_hip/cget/build/tmp-a3db5da587a64213bde99fb856db1b43/composable_kernel-0f98035df1cc5ba3e90ab03187e672b426a25b00/include/ck/utility/generic_memory_space_atomic.hpp:52:19: error: unsafe pointer arithmetic [-Werror,-Wunsafe-buffer-usage]
+[2023-04-26T17:26:31.524Z]         atomicAdd(c_style_pointer_cast<float*>(p_dst) + 1, vx.template AsType<float>()[I1]);
+[2023-04-26T17:26:31.524Z]                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+```
+[2023-04-26T17:26:31.523Z] /jenkins/workspace/compiler-psdb-amd-stg-open/Libs/MIOpen/deps_hip/cget/build/tmp-a3db5da587a64213bde99fb856db1b43/composable_kernel-0f98035df1cc5ba3e90ab03187e672b426a25b00/include/ck/utility/amd_inline_asm.hpp:62:20: error: 'p_a_half2' is an unsafe pointer used for buffer access [-Werror,-Wunsafe-buffer-usage]
+[2023-04-26T17:26:31.523Z]     const half2_t* p_a_half2  = c_style_pointer_cast<const half2_t*>(&a);
+[2023-04-26T17:26:31.523Z]     ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+---
+ cmake/EnableCompilerWarnings.cmake | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/cmake/EnableCompilerWarnings.cmake b/cmake/EnableCompilerWarnings.cmake
+index 87bcb08e8..369cd0b54 100644
+--- a/cmake/EnableCompilerWarnings.cmake
++++ b/cmake/EnableCompilerWarnings.cmake
+@@ -92,6 +92,7 @@ else()
+                 -Wno-unused-command-line-argument
+                 -Wno-weak-vtables
+                 -Wno-covered-switch-default
++                -Wno-unsafe-buffer-usage
+             )
+         else()
+             if (CMAKE_${COMPILER}_COMPILER_ID MATCHES "GNU" AND ${COMPILER} MATCHES "CXX")
