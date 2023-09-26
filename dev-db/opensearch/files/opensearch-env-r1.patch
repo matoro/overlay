@@ -1,7 +1,7 @@
-diff --git a/distribution/src/bin/opensearch-env b/distribution/src/bin/opensearch-env
+diff --git a/bin/opensearch-env b/bin/opensearch-env
 index cd7a0b2b452..3e60f60263a 100644
---- a/distribution/src/bin/opensearch-env
-+++ b/distribution/src/bin/opensearch-env
+--- a/bin/opensearch-env
++++ b/bin/opensearch-env
 @@ -1,98 +1,110 @@
  #!/usr/bin/env bash
  
