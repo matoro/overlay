@@ -15,7 +15,7 @@ KEYWORDS="~amd64 ~arm64"
 RESTRICT="mirror"
 
 PATCHES=(
-	"${FILESDIR}/${PN}-env.patch"
+	"${FILESDIR}/${PN}-env-r1.patch"
 )
 
 DEPEND="acct-group/opensearch
