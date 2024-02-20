@@ -9,7 +9,7 @@ inherit autotools systemd lua-single toolchain-funcs flag-o-matic pam
 DESCRIPTION="Open source, large scale, full packet capturing, indexing, and database system"
 HOMEPAGE="https://arkime.com https://github.com/arkime/arkime"
 SRC_URI="https://github.com/arkime/arkime/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz
-	viewer? ( https://github.com/gchq/CyberChef/releases/download/v10.5.2/CyberChef_v10.5.2.zip )"
+	viewer? ( https://github.com/gchq/CyberChef/releases/download/v10.6.0/CyberChef_v10.6.0.zip )"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -30,9 +30,9 @@ DEPEND="
 			dev-perl/Socket6
 		)
 	)
-	viewer? ( >=net-libs/nodejs-18.19.0[npm] <net-libs/nodejs-19:=[npm] )
-	parliament? ( >=net-libs/nodejs-18.19.0[npm] )
-	wise? ( >=net-libs/nodejs-18.19.0[npm] )
+	viewer? ( >=net-libs/nodejs-18.19.1[npm] <net-libs/nodejs-19:=[npm] )
+	parliament? ( >=net-libs/nodejs-18.19.1[npm] )
+	wise? ( >=net-libs/nodejs-18.19.1[npm] )
 "
 
 RDEPEND="${DEPEND}
@@ -61,9 +61,9 @@ RDEPEND="${DEPEND}
 		virtual/perl-IO-Compress
 		kafka? ( >=dev-libs/librdkafka-1.5.3 )
 	)
-	viewer? ( >=net-libs/nodejs-18.19.0 <net-libs/nodejs-19:= )
-	parliament? ( >=net-libs/nodejs-18.19.0 )
-	wise? ( >=net-libs/nodejs-18.19.0 )
+	viewer? ( >=net-libs/nodejs-18.19.1 <net-libs/nodejs-19:= )
+	parliament? ( >=net-libs/nodejs-18.19.1 )
+	wise? ( >=net-libs/nodejs-18.19.1 )
 "
 
 src_prepare() {
