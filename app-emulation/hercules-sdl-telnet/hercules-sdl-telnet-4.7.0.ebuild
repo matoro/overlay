@@ -1,11 +1,13 @@
-# Copyright 2022 Gentoo Authors
+# Copyright 2022-2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
 inherit cmake
 
-COMMIT="e0e2a9150cb0c7cea8b27ea126e1367b3f03b17e"
+# Use ../hercules-sdl/files/gen_hashes.sh to identify the relevant
+# commit when tagging new versions.
+COMMIT="729f0b688c1426018112c1e509f207fb5f266efa"
 
 DESCRIPTION="Simple RFC-complient TELNET implementation"
 HOMEPAGE="https://github.com/SDL-Hercules-390/telnet"
@@ -13,6 +15,6 @@ SRC_URI="https://github.com/SDL-Hercules-390/telnet/archive/${COMMIT}.tar.gz -> 
 
 LICENSE="public-domain"
 SLOT="0"
-KEYWORDS="~amd64 ~ppc64 ~x86"
+KEYWORDS="~amd64 ~ppc64"
 PATCHES=( "${FILESDIR}/cmakefix.patch" )
 S="${WORKDIR}/telnet-${COMMIT}"
