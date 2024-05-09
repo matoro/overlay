@@ -5,7 +5,6 @@ My personal Gentoo overlay.  Contains some interesting apps/services and manual 
 You may be interested in:
 
 * app-editors/tilde: "An intuitive text editor for the terminal"
-* app-emulation/hercules-sdl: "The SoftDevLabs (SDL) version of the Hercules 4.x Hyperion System/370, ESA/390, and z/Architecture Emulator" (proposed for `::gentoo` in https://github.com/gentoo/gentoo/pull/31051)
 * dev-db/opensearch: "Open source distributed and RESTful search engine" (binary distribution; NOT compiled from source)
 * mail-mta/maddy: "Composable all-in-one mail server"
 * net-analyzer/arkime: "Open source, large scale, full packet capturing, indexing, and database system" (requires pentoo overlay)
