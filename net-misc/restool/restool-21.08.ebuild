@@ -6,8 +6,8 @@ EAPI=8
 inherit git-r3 bash-completion-r1 flag-o-matic
 
 DESCRIPTION="DPAA2 Resource Management Tool"
-HOMEPAGE="https://source.codeaurora.org/external/qoriq/qoriq-components/restool/about/"
-EGIT_REPO_URI="https://source.codeaurora.org/external/qoriq/qoriq-components/restool"
+HOMEPAGE="https://github.com/nxp-qoriq/restool"
+EGIT_REPO_URI="https://github.com/nxp-qoriq/restool"
 EGIT_COMMIT="LSDK-${PV}"
 
 LICENSE="|| ( BSD GPL-2+ )"
