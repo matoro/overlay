@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit git-r3 bash-completion-r1 flag-o-matic
+inherit bash-completion-r1 flag-o-matic git-r3 toolchain-funcs
 
 DESCRIPTION="DPAA2 Resource Management Tool"
 HOMEPAGE="https://github.com/nxp-qoriq/restool"
@@ -14,11 +14,10 @@ LICENSE="|| ( BSD GPL-2+ )"
 SLOT="0"
 KEYWORDS="~arm64"
 
-# man page is behind doc USE flag because we can't pull in app-text/pandoc on non-x86 arch
-# because dev-lang/ghc is not supported :(
 IUSE="doc"
 BDEPEND="doc? ( app-text/pandoc )"
 
+tc-export CC
 append-cflags "-Wno-error=maybe-uninitialized"
 export EXTRA_CFLAGS="${CFLAGS}"
 
