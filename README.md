@@ -17,7 +17,7 @@ You may be interested in:
 |-------|------------|----------------------------|
 | ~~19999~~ | ~~miniflux~~   | ~~www-apps/miniflux~~ ([added to `::gentoo` 2022.05.07](https://github.com/gentoo/gentoo/pull/25048))          |
 | 19998 | maddy      | mail-mta/maddy             |
-| ~~19997~~ | ~~mattermost~~ | ~~www-apps/mattermost-server~~ (removed due to issues with openssl-3) |
+| 19997 | mattermost | www-apps/mattermost-server |
 | ~~19996~~ | ~~synapse~~    | ~~net-im/synapse~~ ([added to `::gentoo` 2022.07.09](https://github.com/gentoo/gentoo/pull/25776))             |
 | 19995 | opensearch | dev-db/opensearch          |
 | 19994 | arkime     | net-analyzer/arkime        |
