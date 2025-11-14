@@ -1,0 +1,31 @@
+--- a/bin/opensearch-env
++++ b/bin/opensearch-env
+@@ -15,6 +15,28 @@
+   OS="other"
+ fi
+ 
++eerror()
++{
++  echo "$@" >&2
++}
++
++OPENSEARCH_JAVA_VER=XXX
++if [[ -z $OPENSEARCH_JAVA_HOME ]]; then
++  if [[ -z ${OPENSEARCH_JAVA_VER} ]]; then
++    eerror "Neither OPENSEARCH_JAVA_HOME nor OPENSEARCH_JAVA_VER is set"
++    exit 1
++  fi
++  GENTOO_VM=$(depend-java-query --get-vm virtual/jre:${OPENSEARCH_JAVA_VER})
++  if [[ -n $GENTOO_VM ]]; then
++    OPENSEARCH_JAVA_HOME=$(java-config-2 --select-vm=${GENTOO_VM} --jre-home)
++  fi
++
++  if [[ -z $OPENSEARCH_JAVA_HOME ]]; then
++    eerror "Could not find a suitable JVM for java v${OPENSEARCH_JAVA_VER}"
++    exit 1
++  fi
++fi
++
+ # SCRIPT might be an arbitrarily deep series of symbolic links; loop until we
+ # have the concrete path
+ while [ -h "$SCRIPT" ] ; do
