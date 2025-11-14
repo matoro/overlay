@@ -1,0 +1,20 @@
+# Opensearch Dashboards user.
+#OSD_USER=opensearch-dashboards
+
+# Opensearch Dashboards group.
+#OSD_USER=opensearch-dashboards
+
+# Where to redirect stdout and stderr
+#OSD_LOGFILE="/var/log/opensearch-dashboards/opensearch-dashboards.out"
+
+# Opensearch Dashboard configuration file.
+#OSD_CONF="/etc/opensearch-dashboards/opensearch_dashboards.yml"
+
+# Additional command-line args
+#OSD_OPTS=""
+
+# Specify the network service that corresponds to the "server.host" setting
+# in your opensearch_dashboards.conf. For example, if you bind to 127.0.0.1,
+# this should # be set to "net.lo" which provides the loopback interface.
+rc_need="net.lo"
+

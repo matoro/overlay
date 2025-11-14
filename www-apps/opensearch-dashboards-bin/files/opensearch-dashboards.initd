@@ -1,0 +1,21 @@
+#!/sbin/openrc-run
+# Copyright 1999-2025 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+: ${OSD_CONF:=/etc/opensearch-dashboards/opensearch_dashboards.yml}
+: ${OSD_USER:=opensearch-dashboards}
+: ${OSD_GROUP:=opensearch-dashboards}
+: ${OSD_LOGFILE:=/var/log/opensearch-dashboards/opensearch-dashboards.out}
+
+OSD_OPTS+=" -c ${OSD_CONF}"
+
+pidfile="/run/opensearch-dashboards.pid"
+command="/usr/share/opensearch-dashboards/bin/opensearch-dashboards"
+command_args="${OSD_OPTS}"
+command_background="yes"
+command_user="${OSD_USER}"
+start_stop_daemon_args="$start_stop_daemon_args -m --stdout ${OSD_LOGFILE} --stderr ${OSD_LOGFILE}"
+
+depend() {
+	need opensearch
+}
