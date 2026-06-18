@@ -4,7 +4,7 @@
 EAPI=8
 
 # Change this when you update the ebuild
-GIT_COMMIT="0e03b4f1cc90289ac8fe2520bed0fbf197abd74b"
+GIT_COMMIT="11c36f4d1e44c36a85aa682becaa7519f63761cf"
 EGO_PN="github.com/mattermost/${PN}"
 MY_PV="${PV/_/-}"
 
@@ -34,7 +34,7 @@ RDEPEND="!www-apps/mattermost-server-ee
 	acct-user/mattermost"
 
 DEPEND="${RDEPEND}
-	>=net-libs/nodejs-20.11:0/20[npm]
+	>=net-libs/nodejs-18.10.0[npm]
 "
 
 QA_PRESTRIPPED="usr/libexec/.*"
